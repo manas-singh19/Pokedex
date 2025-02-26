@@ -1,0 +1,13 @@
+{
+  "migIndex": 1,
+  "data": [
+    {
+      "path": "assets/fonts/RobotoSlab.ttf",
+      "sha1": "607b11807d40548c02c58df35567675ef3dfd2eb"
+    },
+    {
+      "path": "assets/icons/Pokédex.svg",
+      "sha1": "185454fcc40a7f9a641cb3dabb0e3d6152fbe740"
+    }
+  ]
+}

@@ -29,6 +29,7 @@ type FontWeights = 400 | 'normal' | 'bold' | '800' | '900';
 // Define the structure of the theme
 interface ThemeStructure {
   isDark: boolean; // Flag to check if theme is dark or light
+  isDarkString:String;
   colors: {
     primary: Color;
     background: Color;
@@ -79,6 +80,7 @@ interface ThemeStructure {
 // Define light theme
 const lightTheme: ThemeStructure = {
   isDark: false,
+  isDarkString:'false',
   colors: {
     primary: Color.PrimaryLight,
     background: Color.White,
@@ -129,6 +131,7 @@ const lightTheme: ThemeStructure = {
 // Define dark theme
 const darkTheme: ThemeStructure = {
   isDark: true,
+  isDarkString:'true',
   colors: {
     primary: Color.PrimaryDark,
     background: Color.Black,
