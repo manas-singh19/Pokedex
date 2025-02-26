@@ -5,19 +5,22 @@ import { useTheme } from './src/theme/themeProviderProps';
 
 import SplashScreen from './src/screens/splashScreen';
 
+import AppStack from './src/navigation';
+
 const App = () => {
   const { theme, toggleTheme } = useTheme();
 
-  // State to manage splash screen visibility
-  const [isSplashVisible, setIsSplashVisible] = useState(true);
+   // State to manage splash screen visibility
+   const [isSplashVisible, setIsSplashVisible] = useState(true);
 
-  // useEffect(() => {
-  //   // Show the splash screen for 3 seconds
-  //   const timer = setTimeout(() => setIsSplashVisible(false), 3000);
-
-  //   // Cleanup the timer on component unmount
-  //   return () => clearTimeout(timer);
-  // }, []);
+   useEffect(() => {
+     // Show the splash screen for 3 seconds
+     const timer = setTimeout(() => setIsSplashVisible(false), 3000);
+ 
+     // Cleanup the timer on component unmount
+     return () => clearTimeout(timer);
+   }, []);
+ 
 
   // Render the splash screen if it's visible
   if (isSplashVisible) {
@@ -25,10 +28,7 @@ const App = () => {
   }
   
   return (
-    <View style={[styles.container, { backgroundColor: theme.colors.background }]}>
-      <Text style={{ color: theme.colors.textPrimary, fontSize: theme.fonts.h1 }}>Pokedex</Text>
-      <Button title="Toggle Theme" onPress={toggleTheme} />
-    </View>
+    <AppStack/>
   );
 
 

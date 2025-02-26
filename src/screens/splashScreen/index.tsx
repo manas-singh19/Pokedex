@@ -21,7 +21,6 @@ const SplashScreen: React.FC = () => {
               :
                 <AppIcons.Pokedex width={240}  fill="white" />
               }  
-               
           </View>  
       </ScreenWrapper>
     </View>
