@@ -44,14 +44,14 @@ const Header: React.FC<HeaderProps> = ({ title, isIcon, iconsType }) => {
       }}>
         {isIcon &&
           iconsType?.map((icon, index) => (
-            icon == 'switch' ? (
-              <TouchableOpacity key={`sort-${index}`} onPress={toggleTheme} style={{marginRight:6}}> 
+            icon == 'filter' ? (
+              <TouchableOpacity key={`filter-${index}`} onPress={toggleTheme}> 
                 {theme.theme.isDark ? (
-                  <AppIcons.ThemeWhite width={19} fill="black" /> 
+                  <AppIcons.FilterWhite width={30} fill="black" /> 
                 ) : (
-                  <AppIcons.ThemeDark width={19} fill="black" /> 
+                  <AppIcons.Filter width={30} fill="black" /> 
                 )}
-             </TouchableOpacity>  
+              </TouchableOpacity>  
             ) : icon == 'sort' ? (
               <TouchableOpacity key={`sort-${index}`} onPress={toggleTheme}> 
                 {theme.theme.isDark ? (
@@ -61,14 +61,14 @@ const Header: React.FC<HeaderProps> = ({ title, isIcon, iconsType }) => {
                 )}
               </TouchableOpacity>  
             ) : 
-            icon == 'filter'?( 
-              <TouchableOpacity key={`filter-${index}`} onPress={toggleTheme}> 
-              {theme.theme.isDark ? (
-                <AppIcons.FilterWhite width={30} fill="black" /> 
-              ) : (
-                <AppIcons.Filter width={30} fill="black" /> 
-              )}
-            </TouchableOpacity>  
+            icon == 'switch'?(
+              <TouchableOpacity key={`sort-${index}`} onPress={toggleTheme}> 
+                {theme.theme.isDark ? (
+                  <AppIcons.SortWhite width={30} fill="black" /> 
+                ) : (
+                  <AppIcons.Sort width={30} fill="black" /> 
+                )}
+              </TouchableOpacity>  
             ):null
           ))}
           

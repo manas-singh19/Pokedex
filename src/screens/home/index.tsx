@@ -24,7 +24,7 @@ const HomeScreen = () => {
       titleCode: "#002",
       name: "Venusaur",
       image: "https://cdn.pixabay.com/photo/2020/07/21/16/10/pokemon-5426712_1280.png",
-      ability: [{ title: "gress", color: "#62B957",abilityIcon:"gress" }, { title: "Poison", color: "#A552CC", abilityIcon:"posion" }]
+      ability: [{ title: "gress", color: "#62B957",abilityIcon:"gress" }, { title: "Poison", color: "#A552CC", abilityIcon:"poison" }]
     }, 
     {
       id: 4,
@@ -42,10 +42,15 @@ const HomeScreen = () => {
   return (
     <View style={[styles.container, { backgroundColor: theme.colors.background }]}>
       <ScreenWrapper>
-        <Header title="" isIcon={true} iconsType={['filter', 'search']} />
-        <View style={styles.contentContainer}>
-          <AppIcons.Title width={180} height={50} fill="black" />
-          <Text style={styles.description}>
+        <Header title="" isIcon={true} iconsType={['switch', 'sort', 'filter', ]} />
+        <View style={styles.contentContainer}> 
+          {
+            theme.isDark?
+            <AppIcons.TitleWhite width={180} height={50} fill="black" />
+            :
+            <AppIcons.Title width={180} height={50} fill="black" />
+          }
+          <Text style={[styles.description,{color:theme.isDark?"#fff":'#000'}]}>
             Search for Pokémon by name or using the National Pokédex number.
           </Text>
           <FlatList

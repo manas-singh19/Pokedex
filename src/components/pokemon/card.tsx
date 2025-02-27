@@ -1,8 +1,10 @@
 import React, { memo } from 'react';
 import { StyleSheet, Text, View, Image, TouchableOpacity } from 'react-native';
 import AppIcons from '../../utility/icons';
-import { useNavigation, NavigationProp } from '@react-navigation/native';
- 
+import { useNavigation } from '@react-navigation/native';
+
+import { useTheme } from '../../theme/themeProviderProps';
+
 interface Ability {
   title: string;
   color: string;
@@ -10,7 +12,7 @@ interface Ability {
 }
 
 interface PokemonCardProps {
-  id:number;
+  id: number;
   color: string;
   titleCode: string;
   name: string;
@@ -18,33 +20,26 @@ interface PokemonCardProps {
   ability: Ability[];
 }
 
- 
-
-const PokemonCard: React.FC<PokemonCardProps> = memo(({ color, titleCode, name, image, ability }) => {
- 
+const PokemonCard: React.FC<PokemonCardProps> = memo(({ id, color, titleCode, name, image, ability }) => {
   const navigation = useNavigation();
-
+  const theme = useTheme();
   return (
-    <TouchableOpacity style={[styles.container, { backgroundColor: color }]} onPress={()=>{navigation.navigate('DetailsScreen',{id:1})}}>
+    <TouchableOpacity 
+      style={[styles.container, { backgroundColor: color }]} 
+      onPress={() => navigation.navigate('DetailsScreen', { id, name, color })}
+    >
       <View style={styles.itemDetails}>
-        <Text style={styles.titleCode}>{titleCode}</Text>
-        <Text style={styles.name}>{name}</Text>
+        <Text style={[styles.titleCode, {fontWeight:theme.theme.fontWeights.bold}]}>{titleCode}</Text>
+        <Text style={[styles.name,{fontWeight:theme.theme.fontWeights.extraBold}]}>{name}</Text>
         <View style={styles.itemDetailsInner}>
           {ability.map((item, index) => (
             <View key={index} style={[styles.abilityBadge, { backgroundColor: item.color }]}>
-              {/* {
-                item.icon=="gress" ? <AppIcons.Grass width={20} fill="white" /> :
-                item.icon=="posion" ? <AppIcons.Poison width={20} fill="white" /> :
-              }   */}
-              {
-                item.abilityIcon=="gress" ? <AppIcons.Grass width={20} height={20} fill="white" /> :
-                item.abilityIcon=="posion" ? <AppIcons.Poison width={20} height={20} fill="white" /> : 
-                item.abilityIcon=="water" ? <AppIcons.Water width={20} height={20} fill="white" /> : 
-                item.abilityIcon=="flying" ? <AppIcons.Flying width={20} height={20} fill="white" /> : 
-                item.abilityIcon=="fire" ? <AppIcons.Fire width={20} height={20} fill="white" /> : 
-                item.abilityIcon=="electric" ? <AppIcons.Electric width={20} height={20} fill="white" /> : 
-                null
-              }
+              {item.abilityIcon === 'gress' ? <AppIcons.Grass width={20} height={20} fill="white" /> :
+               item.abilityIcon === 'poison' ? <AppIcons.Poison width={20} height={20} fill="white" /> :
+               item.abilityIcon === 'water' ? <AppIcons.Water width={20} height={20} fill="white" /> :
+               item.abilityIcon === 'flying' ? <AppIcons.Flying width={20} height={20} fill="white" /> :
+               item.abilityIcon === 'fire' ? <AppIcons.Fire width={20} height={20} fill="white" /> :
+               item.abilityIcon === 'electric' ? <AppIcons.Electric width={20} height={20} fill="white" /> : null}
               <Text style={styles.abilityText}>{item.title}</Text>
             </View>
           ))}
@@ -57,7 +52,7 @@ const PokemonCard: React.FC<PokemonCardProps> = memo(({ color, titleCode, name, 
   );
 });
 
-export default PokemonCard;
+export default memo(PokemonCard);
 
 const styles = StyleSheet.create({
   container: {
@@ -68,7 +63,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     marginBottom: 12,
-    marginTop:14
+    marginTop: 14
   },
   itemDetails: {
     width: '60%',
@@ -86,13 +81,13 @@ const styles = StyleSheet.create({
   },
   titleCode: {
     fontSize: 13,
-    fontWeight: '400',
+    fontWeight: '500',
   },
   name: {
     fontSize: 26,
     fontWeight: 'bold',
     marginBottom: 5,
-    color:'#ffffff'
+    color: '#ffffff'
   },
   itemDetailsInner: {
     width: '100%',
@@ -104,9 +99,9 @@ const styles = StyleSheet.create({
     paddingVertical: 5,
     borderRadius: 5,
     flexDirection: 'row',
-    justifyContent:'center',
-    alignContent:'center',
-    alignItems:'center'
+    justifyContent: 'center',
+    alignContent: 'center',
+    alignItems: 'center'
   },
   abilityText: {
     color: 'white',
