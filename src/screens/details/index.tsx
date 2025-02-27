@@ -10,7 +10,7 @@ import { FadeInLeft } from 'react-native-reanimated';
 
 // Define the route params type
 type RootStackParamList = {
-  Details: { id?: number; name?: string; color?: string };
+  Details: { id?: number; name?: string; color?: string, ability:string[] };
 };
 
 type DetailsScreenRouteProp = RouteProp<RootStackParamList, 'Details'>;
@@ -20,7 +20,7 @@ interface DetailsScreenProps {
 }
 
 const DetailsScreen: React.FC<DetailsScreenProps> = ({ route }) => {
-  const { id, name, color } = route.params || {};
+  const { id, name, color, ability } = route.params || {};
 
   const { theme } = useTheme(); 
 
@@ -28,11 +28,7 @@ const DetailsScreen: React.FC<DetailsScreenProps> = ({ route }) => {
     console.log('Details Screen Params:', { id, name, color });
   }, [id, name, color]);
 
-  const [ability,setability] = useState([
-    { title: "water", color: "#4A90DA", abilityIcon:"water"  },
-    { title: "water", color: "#4A90DA", abilityIcon:"water"  }
-  ])
-
+  
   const [activeSection,setactiveSection] = useState('about');
 
  
@@ -86,16 +82,29 @@ const DetailsScreen: React.FC<DetailsScreenProps> = ({ route }) => {
                         flexDirection: 'row',
                         gap: 5,
                     }}> 
-                        {ability.map((item, index) => (
-                            <View key={index} style={[styles.abilityBadge, { backgroundColor: item.color }]}>
-                            {item.abilityIcon === 'grass' ? <AppIcons.Grass width={20} height={20} fill="white" /> :
-                            item.abilityIcon === 'poison' ? <AppIcons.Poison width={20} height={20} fill="white" /> :
-                            item.abilityIcon === 'water' ? <AppIcons.Water width={20} height={20} fill="white" /> :
-                            item.abilityIcon === 'flying' ? <AppIcons.Flying width={20} height={20} fill="white" /> :
-                            item.abilityIcon === 'fire' ? <AppIcons.Fire width={20} height={20} fill="white" /> :
-                            item.abilityIcon === 'electric' ? <AppIcons.Electric width={20} height={20} fill="white" /> : null}
-                            <Text style={styles.abilityText}>{item.title}</Text>
-                            </View>
+                         {ability.map((item, index) => ( 
+                            <>
+                            {
+                                item == 'bug'? <AppIcons.BugType width={60} fill="white"/>:
+                                item == 'dark'? <AppIcons.DarkType width={60} fill="white"/>:
+                                item == 'dragon'? <AppIcons.DragonType width={60} fill="white"/>:
+                                item == 'electric'? <AppIcons.ElectricType width={60} fill="white"/>:
+                                item == 'fairy'? <AppIcons.FairyType width={60} fill="white"/>:
+                                item == 'fighting'? <AppIcons.FightingType width={60} fill="white"/>:
+                                item == 'fire'? <AppIcons.FireType width={60} fill="white"/>:
+                                item == 'flying'? <AppIcons.FlyingType width={60} fill="white"/>:
+                                item == 'ghost'? <AppIcons.GhostType width={60} fill="white"/>:
+                                item == 'grass'? <AppIcons.GrassType width={60} fill="white"/>:
+                                item == 'ice'? <AppIcons.IceType width={60} fill="white"/>:
+                                item == 'normal'? <AppIcons.NormalType width={60} fill="white"/>:
+                                item == 'poison'? <AppIcons.PoisonType width={60} fill="white"/>:
+                                item == 'psychic'? <AppIcons.PsychicType width={60} fill="white"/>: 
+                                item == 'rock'? <AppIcons.RockType width={60} fill="white"/>: 
+                                item == 'steel'? <AppIcons.SteelType width={60} fill="white"/>:
+                                item == 'water'? <AppIcons.WaterType width={60} fill="white"/>:  
+                                null
+                            }
+                            </>
                         ))}
                     </View>
                 </View>

@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View, FlatList } from 'react-native';
+import { StyleSheet, Text, View, FlatList,Modal } from 'react-native';
 import React, { useEffect, useState } from 'react';
 import { useTheme } from '../../theme/themeProviderProps';
 import ScreenWrapper from '../../components/screenWrapper';
@@ -15,24 +15,24 @@ const HomeScreen = () => {
       color: "#58ABF6",
       titleCode: "#001",
       name: "Wartortle",
-      image: "https://cdn.pixabay.com/photo/2020/07/21/16/10/pokemon-5426712_1280.png",
-      ability: [{ title: "water", color: "#4A90DA", abilityIcon:"water"  }]
+      image: "https://cdn.pixabay.com/photo/2020/07/21/16/10/pokemon-5426712_1280.png", 
+      ability: ['water']
     },
     {
       id: 2,
       color: "#8BBE8A",
       titleCode: "#002",
       name: "Venusaur",
-      image: "https://cdn.pixabay.com/photo/2020/07/21/16/10/pokemon-5426712_1280.png",
-      ability: [{ title: "gress", color: "#62B957",abilityIcon:"gress" }, { title: "Poison", color: "#A552CC", abilityIcon:"poison" }]
+      image: "https://cdn.pixabay.com/photo/2020/07/21/16/10/pokemon-5426712_1280.png", 
+      ability: ['grass','poison']
     }, 
     {
       id: 4,
-      color: "#FFA756",
+      color: "#F2CB55",
       titleCode: "#004",
       name: "Pikachu",
-      image: "https://cdn.pixabay.com/photo/2020/07/21/16/10/pokemon-5426712_1280.png",
-      ability: [{ title: "Electric", color: "#FD7D24", abilityIcon:"electric" }]
+      image: "https://cdn.pixabay.com/photo/2020/07/21/16/10/pokemon-5426712_1280.png", 
+      ability:['electric']
     }, 
   ]);
 
@@ -70,7 +70,11 @@ const HomeScreen = () => {
             showsVerticalScrollIndicator={false}
           />
         </View>
+        
       </ScreenWrapper>
+      
+        
+
     </View>
   );
 };
@@ -80,6 +84,9 @@ export default HomeScreen;
 const styles = StyleSheet.create({
   container: {
     flex: 1, // Ensures the container takes the full height
+    width:'100%',
+    height:'100%',
+    backgroundColor:'red'
   },
   contentContainer: {
     flex: 1,

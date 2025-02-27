@@ -5,11 +5,7 @@ import { useNavigation } from '@react-navigation/native';
 
 import { useTheme } from '../../theme/themeProviderProps';
 
-interface Ability {
-  title: string;
-  color: string;
-  abilityIcon: string;
-}
+ 
 
 interface PokemonCardProps {
   id: number;
@@ -17,7 +13,8 @@ interface PokemonCardProps {
   titleCode: string;
   name: string;
   image: string;
-  ability: Ability[];
+  //ability: Ability[];
+  ability:string[];
 }
 
 const PokemonCard: React.FC<PokemonCardProps> = memo(({ id, color, titleCode, name, image, ability }) => {
@@ -25,23 +22,38 @@ const PokemonCard: React.FC<PokemonCardProps> = memo(({ id, color, titleCode, na
   const theme = useTheme();
   return (
     <TouchableOpacity 
-      style={[styles.container, { backgroundColor: color }]} 
-      onPress={() => navigation.navigate('DetailsScreen', { id, name, color })}
+      style={[styles.container, { backgroundColor: color, position:'relative', overflow:'hidden'}]} 
+      onPress={() => navigation.navigate('DetailsScreen', { id, name, color, ability })}
     >
+      <AppIcons.Pokeball width={200} height={160} fill="white" style={{position:'absolute', right:-80}}/>
+      <AppIcons.Pattern width={100}  height={100} fill="white" style={{position:'absolute', left:130, top:-40}}/>
       <View style={styles.itemDetails}>
         <Text style={[styles.titleCode, {fontWeight:theme.theme.fontWeights.bold}]}>{titleCode}</Text>
         <Text style={[styles.name,{fontWeight:theme.theme.fontWeights.extraBold}]}>{name}</Text>
         <View style={styles.itemDetailsInner}>
-          {ability.map((item, index) => (
-            <View key={index} style={[styles.abilityBadge, { backgroundColor: item.color }]}>
-              {item.abilityIcon === 'gress' ? <AppIcons.Grass width={20} height={20} fill="white" /> :
-               item.abilityIcon === 'poison' ? <AppIcons.Poison width={20} height={20} fill="white" /> :
-               item.abilityIcon === 'water' ? <AppIcons.Water width={20} height={20} fill="white" /> :
-               item.abilityIcon === 'flying' ? <AppIcons.Flying width={20} height={20} fill="white" /> :
-               item.abilityIcon === 'fire' ? <AppIcons.Fire width={20} height={20} fill="white" /> :
-               item.abilityIcon === 'electric' ? <AppIcons.Electric width={20} height={20} fill="white" /> : null}
-              <Text style={styles.abilityText}>{item.title}</Text>
-            </View>
+          {ability.map((item, index) => ( 
+            <>
+              {
+                item == 'bug'? <AppIcons.BugType width={60} fill="white"/>:
+                item == 'dark'? <AppIcons.DarkType width={60} fill="white"/>:
+                item == 'dragon'? <AppIcons.DragonType width={60} fill="white"/>:
+                item == 'electric'? <AppIcons.ElectricType width={60} fill="white"/>:
+                item == 'fairy'? <AppIcons.FairyType width={60} fill="white"/>:
+                item == 'fighting'? <AppIcons.FightingType width={60} fill="white"/>:
+                item == 'fire'? <AppIcons.FireType width={60} fill="white"/>:
+                item == 'flying'? <AppIcons.FlyingType width={60} fill="white"/>:
+                item == 'ghost'? <AppIcons.GhostType width={60} fill="white"/>:
+                item == 'grass'? <AppIcons.GrassType width={60} fill="white"/>:
+                item == 'ice'? <AppIcons.IceType width={60} fill="white"/>:
+                item == 'normal'? <AppIcons.NormalType width={60} fill="white"/>:
+                item == 'poison'? <AppIcons.PoisonType width={60} fill="white"/>:
+                item == 'psychic'? <AppIcons.PsychicType width={60} fill="white"/>: 
+                item == 'rock'? <AppIcons.RockType width={60} fill="white"/>: 
+                item == 'steel'? <AppIcons.SteelType width={60} fill="white"/>:
+                item == 'water'? <AppIcons.WaterType width={60} fill="white"/>:  
+                null
+              }
+            </>
           ))}
         </View>
       </View>
@@ -57,7 +69,7 @@ export default memo(PokemonCard);
 const styles = StyleSheet.create({
   container: {
     width: '100%',
-    height: 120,
+    height: 140,
     borderRadius: 9,
     padding: 8,
     flexDirection: 'row',
@@ -73,11 +85,14 @@ const styles = StyleSheet.create({
   itemImage: {
     width: '40%', 
     justifyContent: 'flex-end',
+    alignItems:'center',
+    alignContent:'center'
   },
   pokemonImage: {
     width: 120,
-    height: 140,
-    resizeMode: 'contain',
+    height: 110,
+    resizeMode: 'cover',
+    marginTop:10, 
   },
   titleCode: {
     fontSize: 13,
