@@ -7,6 +7,8 @@ import SplashScreen from './src/screens/splashScreen';
 
 import AppStack from './src/navigation';
 
+
+
 const App = () => {
   const { theme, toggleTheme } = useTheme();
 

@@ -10,9 +10,11 @@ interface HeaderProps {
   title: string;
   isIcon?: boolean;
   iconsType?: string[];
+  filterOpen:()=>void;
+  filterClose:()=>void;
 }
 
-const Header: React.FC<HeaderProps> = ({ title, isIcon, iconsType }) => {
+const Header: React.FC<HeaderProps> = ({ title, isIcon, iconsType,filterOpen,filterClose }) => {
     const theme = useTheme();   
     const {toggleTheme} = useTheme();
   return (
@@ -44,26 +46,34 @@ const Header: React.FC<HeaderProps> = ({ title, isIcon, iconsType }) => {
       }}>
         {isIcon &&
           iconsType?.map((icon, index) => (
-            icon != 'filter' ? 
-            <TouchableOpacity onPress={toggleTheme}> 
-                {
-                  theme.theme.isDark?
-                  <AppIcons.FilterWhite width={30} fill="black" /> 
-                  :
-                  <AppIcons.Filter width={30} fill="black" /> 
-                }
-            </TouchableOpacity>
-            :  
-            <TouchableOpacity>
-                 
-                {
-                  theme.theme.isDark?
-                  <AppIcons.SortWhite width={30} fill="black" />
-                  :
-                  <AppIcons.Sort width={30} fill="black" />
-                }
+            icon == 'switch' ? (
+              <TouchableOpacity key={`sort-${index}`} onPress={toggleTheme} style={{marginRight:6}}> 
+                {theme.theme.isDark ? (
+                  <AppIcons.ThemeWhite width={19} fill="black" /> 
+                ) : (
+                  <AppIcons.ThemeDark width={19} fill="black" /> 
+                )}
+             </TouchableOpacity>  
+            ) : icon == 'sort' ? (
+              <TouchableOpacity key={`sort-${index}`} onPress={toggleTheme}> 
+                {theme.theme.isDark ? (
+                  <AppIcons.SortWhite width={30} fill="black" /> 
+                ) : (
+                  <AppIcons.Sort width={30} fill="black" /> 
+                )}
+              </TouchableOpacity>  
+            ) : 
+            icon == 'filter'?( 
+              <TouchableOpacity key={`filter-${index}`} onPress={filterOpen}> 
+              {theme.theme.isDark ? (
+                <AppIcons.FilterWhite width={30} fill="black" /> 
+              ) : (
+                <AppIcons.Filter width={30} fill="black" /> 
+              )}
             </TouchableOpacity>  
+            ):null
           ))}
+          
       </View>
     </View>
   );
