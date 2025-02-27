@@ -4,12 +4,12 @@ import { useTheme } from '../../theme/themeProviderProps';
 import ScreenWrapper from '../../components/screenWrapper';
 import Header from '../../components/headers';
 import PokemonCard from '../../components/pokemon/card';
-import AppIcons from '../../utility/icons';
-import BottomSheet from '@gorhom/bottom-sheet';
-
+import AppIcons from '../../utility/icons'; 
+import FilterModal from '../../components/filter';
+  
 const HomeScreen = () => {
   const { theme } = useTheme();
-  const bottomSheetRef = useRef<BottomSheet>(null);
+  
 
   const pokemonData = useMemo(
     () => [
@@ -46,6 +46,9 @@ const HomeScreen = () => {
   const handleOpen = ()=>{
     setmodal(!model);
   }
+
+
+
   return (
     <View style={[styles.container, { backgroundColor: theme.colors.background }]}>
       <ScreenWrapper>
@@ -79,18 +82,9 @@ const HomeScreen = () => {
             showsVerticalScrollIndicator={false}
           />
         </View>
-      </ScreenWrapper>  
+      </ScreenWrapper>
 
-      <Modal animationType="slide" transparent={true} visible={model}>
-        <View style={{ height: '100%', marginTop: 'auto', position: "relative", backgroundColor: '#0e0e0e61', zIndex: 999999 }}>
-          <TouchableOpacity style={{ backgroundColor:'transparent', width: '100%', height: "45%" }}  onPress={()=>setmodal(false)}>
-            <View></View>
-          </TouchableOpacity>  
-          <View style={{ width: '100%', height: "55%", backgroundColor:'red' }}>
-              
-          </View> 
-        </View>
-      </Modal> 
+      <FilterModal model={model} setModalHandler={handleOpen}/>
 
     </View>
   );
@@ -118,4 +112,5 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
+ 
 });
