@@ -1,57 +1,54 @@
-import { StyleSheet, Text, View, FlatList, Modal, TouchableOpacity } from 'react-native';
-import React, { useState, useCallback, useMemo, useRef, useEffect } from 'react';
+import { StyleSheet, Text, View, FlatList, ActivityIndicator, TouchableOpacity } from 'react-native';
+import React, { useState, useCallback, useMemo } from 'react';
 import { useTheme } from '../../theme/themeProviderProps';
 import ScreenWrapper from '../../components/screenWrapper';
 import Header from '../../components/headers';
 import PokemonCard from '../../components/pokemon/card';
 import AppIcons from '../../utility/icons'; 
 import FilterModal from '../../components/filter';
-
 import SearchBar from '../../components/search';
-
 import { PokemonCardBackgroundColor } from "../../utility/pokemonColor";
-  
-
 import usePokemonData from './appcall';
 
 const HomeScreen = () => {
   const { theme } = useTheme();
-  
-  const { pokemonList, fetchPokemonList } = usePokemonData();
+  const { pokemonList, fetchMorePokemon, isLoading } = usePokemonData();
 
-  const [model,setmodal] = useState<boolean>(false);
-  const handleOpen = ()=>{
-    setmodal(!model);
-  }
+  const [modalVisible, setModalVisible] = useState<boolean>(false);
+  const [filters, setFilters] = useState<string>("");
+  const [search, setSearch] = useState<string>("");
 
-  const [filters,setFilters] = useState<string>("");
-  const selectedFilter = (data:any)=>{
+  // Toggle Filter Modal
+  const handleOpen = useCallback(() => setModalVisible(prev => !prev), []);
+
+  // Handle filter selection
+  const selectedFilter = useCallback((data: any) => {
     setFilters(data);
-    setmodal(false);
-  }
+    setModalVisible(false);
+  }, []);
 
-  const [search,setSearch] = useState('');
-  const searchTextHandler = (data:any)=>{
-    setSearch(data);
-  }
-   
+  // Handle search input
+  const searchTextHandler = useCallback((data: any) => setSearch(data), []);
 
-   
-  useEffect(()=>{
-    console.log("pokemonList: ", pokemonList); 
-  },[]);  
+  // Memoized color function to prevent unnecessary renders
+  type PokemonType = keyof typeof PokemonCardBackgroundColor;
+  const getColor = useCallback((type: PokemonType) => {
+    return PokemonCardBackgroundColor[type] || "orange";
+  }, []);
 
-
-  type PokemonType = keyof typeof PokemonCardBackgroundColor; 
-  const getColor = (type: PokemonType) => {
-      return PokemonCardBackgroundColor[type] || "orange"; // Default color if type is missing
-  };
-
+  // Filter Pokémon list based on search & filter criteria
+  const filteredPokemonList = useMemo(() => {
+    return pokemonList.filter((pokemon) => {
+      const matchesSearch = search ? pokemon.name.toLowerCase().includes(search.toLowerCase()) : true;
+      const matchesFilter = filters ? pokemon.ability.includes(filters) : true;
+      return matchesSearch && matchesFilter;
+    });
+  }, [pokemonList, search, filters]);
 
   return (
     <View style={[styles.container, { backgroundColor: theme.colors.background }]}>
       <ScreenWrapper>
-        <Header title="" isIcon={true} iconsType={['switch', 'fav', 'filter']} filterOpen={handleOpen}/>
+        <Header title="" isIcon={true} iconsType={['switch', 'fav', 'filter']} filterOpen={handleOpen} />
 
         <View style={styles.contentContainer}>
           {theme.isDark ? (
@@ -61,16 +58,17 @@ const HomeScreen = () => {
           )}
 
           <Text style={[styles.description, { color: theme.isDark ? "#fff" : "#000" }]}>
-           Search for Pokémon by name or using the National Pokédex number.
+            Search for Pokémon by name or using the National Pokédex number.
           </Text>
 
-          <SearchBar placeHolderText="What Pokémon are you looking for?" handlerFunc={searchTextHandler}/>
+          <SearchBar placeHolderText="What Pokémon are you looking for?" handlerFunc={searchTextHandler} />
 
           <FlatList
-            data={pokemonList}
+            data={filteredPokemonList} // Render only filtered results
             keyExtractor={(item) => item.id.toString()}
             renderItem={({ item }) => (
               <PokemonCard
+                key={item.id}
                 color={getColor(item.color as PokemonType)}
                 titleCode={item.titleCode}
                 name={item.name}
@@ -81,13 +79,17 @@ const HomeScreen = () => {
             )}
             contentContainerStyle={styles.listContent}
             showsVerticalScrollIndicator={false}
+            onEndReached={fetchMorePokemon} // Fetch more when scrolling to the end
+            onEndReachedThreshold={0.5}
+            ListFooterComponent={isLoading ? <ActivityIndicator size="large" /> : null}
+            initialNumToRender={20} // Optimize FlatList initial render
+            maxToRenderPerBatch={10} // Load in small chunks for better performance
+            windowSize={5} // Keeps only 5 screens worth of items in memory
           />
-
         </View>
       </ScreenWrapper>
 
-      <FilterModal model={model} setModalHandler={handleOpen} selectedFilter={selectedFilter}/>
-
+      <FilterModal model={modalVisible} setModalHandler={handleOpen} selectedFilter={selectedFilter} />
     </View>
   );
 };
@@ -109,10 +111,4 @@ const styles = StyleSheet.create({
   listContent: {
     paddingBottom: 20,
   },
-  sheetContent: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
- 
 });
