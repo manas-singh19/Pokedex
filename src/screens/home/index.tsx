@@ -1,5 +1,5 @@
 import { StyleSheet, Text, View, FlatList, Modal, TouchableOpacity } from 'react-native';
-import React, { useState, useCallback, useMemo, useRef } from 'react';
+import React, { useState, useCallback, useMemo, useRef, useEffect } from 'react';
 import { useTheme } from '../../theme/themeProviderProps';
 import ScreenWrapper from '../../components/screenWrapper';
 import Header from '../../components/headers';
@@ -9,40 +9,15 @@ import FilterModal from '../../components/filter';
 
 import SearchBar from '../../components/search';
 
+import { PokemonCardBackgroundColor } from "../../utility/pokemonColor";
+  
+
+import usePokemonData from './appcall';
+
 const HomeScreen = () => {
   const { theme } = useTheme();
   
-
-  const pokemonData = useMemo(
-    () => [
-      {
-        id: 1,
-        color: "#58ABF6",
-        titleCode: "#001",
-        name: "Wartortle",
-        image: "https://cdn.pixabay.com/photo/2020/07/21/16/10/pokemon-5426712_1280.png", 
-        ability: ['water']
-      },
-      {
-        id: 2,
-        color: "#8BBE8A",
-        titleCode: "#002",
-        name: "Venusaur",
-        image: "https://cdn.pixabay.com/photo/2020/07/21/16/10/pokemon-5426712_1280.png", 
-        ability: ['grass', 'poison']
-      }, 
-      {
-        id: 3,
-        color: "#F2CB55",
-        titleCode: "#004",
-        name: "Pikachu",
-        image: "https://cdn.pixabay.com/photo/2020/07/21/16/10/pokemon-5426712_1280.png", 
-        ability: ['electric']
-      } 
-    ],
-    []
-  );
-
+  const { pokemonList, fetchPokemonList } = usePokemonData();
 
   const [model,setmodal] = useState<boolean>(false);
   const handleOpen = ()=>{
@@ -59,8 +34,12 @@ const HomeScreen = () => {
   const searchTextHandler = (data:any)=>{
     setSearch(data);
   }
-
+   
   
+   
+  useEffect(()=>{
+    console.log("pokemonList: ", pokemonList); 
+  },[]);  
 
 
   return (
@@ -82,11 +61,49 @@ const HomeScreen = () => {
           <SearchBar placeHolderText="What Pokémon are you looking for?" handlerFunc={searchTextHandler}/>
 
           <FlatList
-            data={pokemonData}
+            data={pokemonList}
             keyExtractor={(item) => item.id.toString()}
             renderItem={({ item }) => (
               <PokemonCard
-                color={item.color}
+                color={
+                  item.color ==='bug'?
+                  PokemonCardBackgroundColor.bug:
+                  item.color ==='dark'?
+                  PokemonCardBackgroundColor.dark:
+                  item.color ==='dragon'?
+                  PokemonCardBackgroundColor.dragon:
+                  item.color ==='electric'?
+                  PokemonCardBackgroundColor.electric:
+                  item.color ==='fairy'?
+                  PokemonCardBackgroundColor.fairy:
+                  item.color ==='fighting'?
+                  PokemonCardBackgroundColor.fighting:
+                  item.color ==='fire'?
+                  PokemonCardBackgroundColor.fire:
+                  item.color ==='flying'?
+                  PokemonCardBackgroundColor.flying:
+                  item.color ==='ghost'?
+                  PokemonCardBackgroundColor.ghost:
+                  item.color ==='grass'?
+                  PokemonCardBackgroundColor.grass:
+                  item.color ==='ground'?
+                  PokemonCardBackgroundColor.ground:
+                  item.color ==='ice'?
+                  PokemonCardBackgroundColor.ice:
+                  item.color ==='normal'?
+                  PokemonCardBackgroundColor.normal:
+                  item.color ==='poison'?
+                  PokemonCardBackgroundColor.poison:
+                  item.color ==='psychic'?
+                  PokemonCardBackgroundColor.psychic:
+                  item.color ==='rock'?
+                  PokemonCardBackgroundColor.rock:
+                  item.color ==='steel'?
+                  PokemonCardBackgroundColor.steel:
+                  item.color ==='water'?
+                  PokemonCardBackgroundColor.water:
+                  'orange'
+                }
                 titleCode={item.titleCode}
                 name={item.name}
                 image={item.image}
@@ -97,6 +114,7 @@ const HomeScreen = () => {
             contentContainerStyle={styles.listContent}
             showsVerticalScrollIndicator={false}
           />
+
         </View>
       </ScreenWrapper>
 

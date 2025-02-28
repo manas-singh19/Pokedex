@@ -29,7 +29,7 @@ const PokemonCard: React.FC<PokemonCardProps> = memo(({ id, color, titleCode, na
       <AppIcons.Pattern width={100}  height={100} fill="white" style={{position:'absolute', left:130, top:-40}}/>
       <View style={styles.itemDetails}>
         <Text style={[styles.titleCode, {fontWeight:theme.theme.fontWeights.bold}]}>{titleCode}</Text>
-        <Text style={[styles.name,{fontWeight:theme.theme.fontWeights.extraBold}]}>{name}</Text>
+        <Text style={[styles.name,{fontWeight:theme.theme.fontWeights.extraBold, textTransform:'capitalize'}]}>{name}</Text>
         <View style={styles.itemDetailsInner}>
           {ability.map((item, index) => ( 
             <>
@@ -74,7 +74,7 @@ const styles = StyleSheet.create({
     padding: 8,
     flexDirection: 'row',
     alignItems: 'center',
-    marginBottom: 12,
+    marginBottom: 0,
     marginTop: 14
   },
   itemDetails: {
@@ -89,8 +89,8 @@ const styles = StyleSheet.create({
     alignContent:'center'
   },
   pokemonImage: {
-    width: 120,
-    height: 110,
+    width: 160,
+    height: 130,
     resizeMode: 'cover',
     marginTop:10, 
   },
