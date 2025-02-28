@@ -1,185 +1,139 @@
-import { StyleSheet, Text, View, Modal, TouchableOpacity } from 'react-native'
 import React from 'react';
+import { StyleSheet, Text, View, Modal, TouchableOpacity } from 'react-native';
 import { BlurView } from '@react-native-community/blur';
 import AppIcons from '../../utility/icons';
+
+type IconKeys = keyof typeof AppIcons;
 import { useTheme } from '../../theme/themeProviderProps';
 
-
- 
 interface FilterModalProps {
   model: boolean;
   setModalHandler: (value: boolean) => void;
+  selectedFilter: (type: string) => void;
 }
 
-const FilterModal: React.FC<FilterModalProps> = ({ model, setModalHandler }) => {
-    const {theme} = useTheme(); 
+const FILTER_TYPES = [
+  'bug', 'dark', 'dragon', 'electric', 'fairy', 'fighting', 'fire', 'flying', 'ghost', 
+  'grass', 'ground', 'ice', 'normal', 'poison', 'psychic', 'rock', 'steel', 'water'
+];
+
+const FilterModal: React.FC<FilterModalProps> = ({ model, setModalHandler, selectedFilter }) => {
+  const { theme } = useTheme(); 
+  const textColor = theme.isDark ? "#fff" : "#000";
+  const bgColor = theme.colors.background;
 
   return (
-    <Modal animationType="slide" transparent={true} visible={model}>
-    <View style={{ height: '100%', marginTop: 'auto', position: "relative", backgroundColor: '#0e0e0e61', zIndex: 999999 }}>
-       {/* Blur Effect */}
-      <BlurView 
-        style={{ position: "absolute", width: "100%", height: "100%" }} 
-        blurType={theme.isDark?'dark':'light'}  // Options: "light", "dark", "extraDark"
-        blurAmount={12} 
-        reducedTransparencyFallbackColor="black"
-      />
+    <Modal animationType="slide" transparent visible={model}>
+      <View style={styles.modalContainer}>
+        
+        {/* Blur Effect */}
+        <BlurView style={styles.blurView} blurType={theme.isDark ? 'dark' : 'light'} blurAmount={12} reducedTransparencyFallbackColor="black" />
 
-      <TouchableOpacity style={{ backgroundColor:'transparent', width: '100%', height: "60%" }}  onPress={()=>setModalHandler(false)}>
-        <View></View>
-      </TouchableOpacity>  
+        {/* Close Modal on Background Click */}
+        <TouchableOpacity style={styles.modalOverlay} onPress={() => setModalHandler(false)} />
 
-      <View style={{ width: '100%', height: "40%", }}>
-        <View style={styles.bottomSheet}>
-          <TouchableOpacity onPress={()=>setModalHandler(false)} style={{
-            backgroundColor:theme.colors.background,
-            width:'20%',
-            height:10,
-            borderRadius:33
-          }}></TouchableOpacity>
-        </View>
+        {/* Bottom Sheet */}
+        <View style={styles.bottomSheetContainer}>
+                        
+          {/* Handle Bar */}
+          <View style={{width:'100%', height:10, justifyContent:'center', alignContent:'center', alignItems:'center'}}>
+                <TouchableOpacity onPress={() => setModalHandler(false)} style={[styles.handleBar, { backgroundColor: theme.isDark?'#000':'#fff'}]} />
+          </View>
+          
 
-        <View style={[styles.filterContainer,{backgroundColor:theme.colors.background}]}>
-            <Text style={{
-              fontSize:theme.fonts.b1,
-              fontWeight:theme.fontWeights.bold,
-              color:theme.isDark?"#fff":"#000"
-            }}>Filter</Text>
-            <Text style={{
-              fontSize:theme.fonts.b4,
-              fontWeight:theme.fontWeights.normal,
-              color:theme.isDark?"#fff":"#000"
-            }}>Use advanced search to explore Pokémon by type, weakness, height and more!</Text>
-            
-            <Text style={{
-              fontSize:theme.fonts.b3,
-              fontWeight:theme.fontWeights.bold,
-              marginVertical:9,
-              marginTop:22
-            }}>Type</Text>
+          <View style={[styles.bottomSheet, { backgroundColor: bgColor, justifyContent:'flex-start', alignContent:'flex-start', alignItems:'flex-start' }]}>
 
-            <View style={{width:'100%', minHeight:90, flexWrap:'wrap', flexDirection:'row'}}>
-             
-              <TouchableOpacity style={styles.filterTypeIcons}>
-                <AppIcons.Bug width={25} fill="black"/> 
-              </TouchableOpacity>
+            {/* Filter Section */}
+            <Text style={[styles.title, { color: textColor, }]}>Filter</Text>
+            <Text style={[styles.description, { color: textColor, }]}>
+              Use advanced search to explore Pokémon by type, weakness, height, and more!
+            </Text>
 
-              <TouchableOpacity style={styles.filterTypeIcons}>
-                <AppIcons.Dark width={25} fill="black"/> 
-              </TouchableOpacity>
-
-              <TouchableOpacity style={styles.filterTypeIcons}>
-                <AppIcons.Dragon width={25} fill="black"/> 
-              </TouchableOpacity>
-
-              <TouchableOpacity style={styles.filterTypeIcons}>
-                <AppIcons.Electric width={25} fill="black"/> 
-              </TouchableOpacity>
-
-              <TouchableOpacity style={styles.filterTypeIcons}>
-                <AppIcons.Fairy width={25} fill="black"/> 
-              </TouchableOpacity>
-
-
-              <TouchableOpacity style={styles.filterTypeIcons}>
-                <AppIcons.Fighting width={25} fill="black"/> 
-              </TouchableOpacity> 
-
-              <TouchableOpacity style={styles.filterTypeIcons}>
-                <AppIcons.Fire width={25} fill="black"/> 
-              </TouchableOpacity>
-
-
-              <TouchableOpacity style={styles.filterTypeIcons}>
-                <AppIcons.Flying width={25} fill="black"/> 
-              </TouchableOpacity>
-
-
-              <TouchableOpacity style={styles.filterTypeIcons}>
-                <AppIcons.Ghost width={25} fill="black"/> 
-              </TouchableOpacity>
-
-              <TouchableOpacity style={styles.filterTypeIcons}>
-                <AppIcons.Grass width={25} fill="black"/> 
-              </TouchableOpacity>
-
-              <TouchableOpacity style={styles.filterTypeIcons}>
-                <AppIcons.Ground width={25} fill="black"/> 
-              </TouchableOpacity>
-
-              <TouchableOpacity style={styles.filterTypeIcons}>
-                <AppIcons.Ice width={25} fill="black"/> 
-              </TouchableOpacity>
-
-
-              <TouchableOpacity style={styles.filterTypeIcons}>
-                <AppIcons.Normal width={25} fill="black"/> 
-              </TouchableOpacity>
-
-
-
-              <TouchableOpacity style={styles.filterTypeIcons}>
-                <AppIcons.Poison width={25} fill="black"/> 
-              </TouchableOpacity>
-
-
-
-              <TouchableOpacity style={styles.filterTypeIcons}>
-                <AppIcons.Psychic width={25} fill="black"/> 
-              </TouchableOpacity>
-
-
-              <TouchableOpacity style={styles.filterTypeIcons}>
-                <AppIcons.Rock width={25} fill="black"/> 
-              </TouchableOpacity>
-
-
-
-              <TouchableOpacity style={styles.filterTypeIcons}>
-                <AppIcons.Steel width={25} fill="black"/> 
-              </TouchableOpacity>
-
-
-
-              <TouchableOpacity style={styles.filterTypeIcons}>
-                <AppIcons.Water width={25} fill="black"/> 
-              </TouchableOpacity>
-
+            {/* Type Section */}
+            <Text style={[styles.subtitle, { color: textColor }]}>Type</Text>
+            <View style={styles.filterGrid}>
+              {FILTER_TYPES.map((type) => (
+                <FilterTypeButton key={type} type={type} onPress={() => selectedFilter(type)} />
+              ))}
             </View>
-        </View>
 
-      </View> 
-      
-    </View>
-  </Modal> 
-  )
+          </View>
+        </View>
+      </View>
+    </Modal>
+  );
+};
+
+const FilterTypeButton: React.FC<{ type: string; onPress: () => void }> = ({ type, onPress }) => {
+  const IconComponent = AppIcons[type.charAt(0).toUpperCase() + type.slice(1) as IconKeys];
+  return (
+    <TouchableOpacity style={styles.filterTypeButton} onPress={onPress}>
+      {React.createElement(IconComponent, { width: 25, fill: "black" })}
+    </TouchableOpacity>
+  );
 }
 
-export default FilterModal
+export default FilterModal;
 
+/* Styles */
 const styles = StyleSheet.create({
-    bottomSheet:{
-        width:'100%', height:25, backgroundColor:'transparent', justifyContent:'center',
-        alignContent:'center',
-        alignItems:'center'
-      },
-      filterContainer:{
-        width:'100%',
-        height:'100%',
-        backgroundColor:'#ffffff',
-        borderTopLeftRadius:33,
-        borderTopRightRadius:33,
-        paddingHorizontal:34,
-        paddingTop:33
-      },
-      filterTypeIcons:{
-        width:40, height:40, 
-        backgroundColor:'#f1f1f1',
-        borderRadius:22,
-        marginRight:6, 
-        marginVertical:6,
-        justifyContent:'center',
-        alignContent: 'center',
-        alignItems:'center'
-      }
-})
+  modalContainer: {
+    flex: 1,
+    backgroundColor: '#0e0e0e61',
+    justifyContent: 'flex-end',
+  },
+  blurView: {
+    ...StyleSheet.absoluteFillObject,
+  },
+  modalOverlay: {
+    flex: 6, // Takes 60% height
+    width: '100%',
+  },
+  bottomSheetContainer: {
+    flex: 4, // Takes 40% height,
+    justifyContent:'flex-start'
+  },
+  bottomSheet: {
+    flex: 1,
+    borderTopLeftRadius: 33,
+    borderTopRightRadius: 33,
+    paddingHorizontal: 34,
+    paddingTop: 33,
+    alignItems: 'center',
+  },
+  handleBar: {
+    width: '20%',
+    height: 10,
+    borderRadius: 33,
+    marginBottom: 16,
+  },
+  title: {
+    fontSize: 18,
+    fontWeight: 'bold',
+  },
+  description: {
+    fontSize: 14,
+    textAlign: 'left',
+    marginBottom: 20,
+  },
+  subtitle: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    marginBottom: 10,
+  },
+  filterGrid: {
+    width: '100%',
+    flexWrap: 'wrap',
+    flexDirection: 'row',
+    justifyContent: 'flex-start' 
+  },
+  filterTypeButton: {
+    width: 45,
+    height: 45,
+    backgroundColor: '#f1f1f1',
+    borderRadius: 20,
+    margin: 6,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+});

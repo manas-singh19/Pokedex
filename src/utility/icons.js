@@ -67,8 +67,7 @@ import SteelType from '../../assets/icons/pokemontype/steel/Type=Steel.svg';
 
 import Water from '../../assets/icons/pokemontype/water/Water.svg';
 import WaterType from '../../assets/icons/pokemontype/water/Type=Water.svg';
-
-
+ 
 
 // ---------- end: Icons  ----------
 
@@ -77,6 +76,8 @@ import WaterType from '../../assets/icons/pokemontype/water/Type=Water.svg';
  
 
 import Back from '../../assets/icons/Back.svg';
+import BackBlack from '../../assets/icons/BackBlack.svg';
+
 import Pattern from '../../assets/icons/Pattern.svg';
 
 import BlurIcon from '../../assets/icons/blurIcon.svg';
@@ -87,6 +88,11 @@ import LevelUpWhite from '../../assets/icons/LevelUpWhite.svg';
 
 import ThemeDark from '../../assets/icons/ThemeDark.svg';
 import ThemeWhite from '../../assets/icons/ThemeWhite.svg';
+
+import Search from '../../assets/icons/search.svg';
+
+import HeartBlack from '../../assets/icons/HeartBlack.svg';
+import Heart from '../../assets/icons/Heart.svg';
 
 const AppIcons = {
 
@@ -138,14 +144,17 @@ const AppIcons = {
 
   Title,
   TitleWhite,
-  
+  Search,
 
   Back,
+  BackBlack,
   Pattern,
   BlurIcon,
   Pokeball,
   LevelUp,
-  LevelUpWhite
+  LevelUpWhite,
+  HeartBlack,
+  Heart
 };
 
 export default AppIcons;

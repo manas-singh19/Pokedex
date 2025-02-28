@@ -64,7 +64,7 @@ const DetailsScreen: React.FC<DetailsScreenProps> = ({ route }) => {
 
   return (
     <ScreenWrapper>
-      <HeaderBack title="Pokemon Details" back={true} color={color || '#ffffff'}/>
+      <HeaderBack title="Pokemon Details" back={true} color={color || '#ffffff'} normal={false} />
       <View style={[styles.container, { backgroundColor: color || '#ffffff' }]}>
         {/* 
         <Text style={styles.text}>Pokemon ID: {id}</Text>

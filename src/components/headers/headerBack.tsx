@@ -10,17 +10,20 @@ import AppIcons from '../../utility/icons';
 interface HeaderProps {
   title: string;
   back?: boolean; 
-  color:string
+  color:string,
+  normal:boolean
 }
 
-const HeaderBack: React.FC<HeaderProps> = ({ title, back, color}) => {
+const HeaderBack: React.FC<HeaderProps> = ({ title, back, color, normal}) => {
     const theme = useTheme();   
     const {toggleTheme} = useTheme();
     const navigation = useNavigation();
+
   return (
-    <View style={[styles.container,{
-        backgroundColor:color,
-    }]}>
+    <View style={[styles.container,
+    !normal?{backgroundColor:color}:{backgroundColor:theme.theme.isDark?'#000':'#fff'}
+    
+    ]}>
       <View style={{
             width: '60%',
             height: 40,
@@ -31,14 +34,19 @@ const HeaderBack: React.FC<HeaderProps> = ({ title, back, color}) => {
             alignContent:'center', 
       }}>
         <TouchableOpacity style={{flexDirection:'row', alignContent:'center', alignItems:'center'}} onPress={()=>{navigation.goBack()}}>
-             
-            <AppIcons.Back width={30} fill="black" />
-            {/* <Text style={{
-                color:theme.theme.isDark?'white':'black',
-                fontSize:theme.theme.fonts.b2,
-                fontWeight:theme.theme.fontWeights.bold,
-                marginLeft:4
-            }}>{title}</Text> */}
+            {
+              theme.theme.isDark?<AppIcons.Back width={22} fill="black" />:<AppIcons.BackBlack width={22} fill="black" />
+            }  
+            {
+              normal&&( 
+                <Text style={{
+                    color:theme.theme.isDark?'#fff':'#000',
+                    fontSize:theme.theme.fonts.b2,
+                    fontWeight:theme.theme.fontWeights.bold,
+                    marginLeft:4
+                }}>{title}</Text>
+              )
+            }
         </TouchableOpacity>
         
       </View>

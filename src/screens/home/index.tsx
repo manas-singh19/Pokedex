@@ -6,7 +6,9 @@ import Header from '../../components/headers';
 import PokemonCard from '../../components/pokemon/card';
 import AppIcons from '../../utility/icons'; 
 import FilterModal from '../../components/filter';
-  
+
+import SearchBar from '../../components/search';
+
 const HomeScreen = () => {
   const { theme } = useTheme();
   
@@ -30,13 +32,13 @@ const HomeScreen = () => {
         ability: ['grass', 'poison']
       }, 
       {
-        id: 4,
+        id: 3,
         color: "#F2CB55",
         titleCode: "#004",
         name: "Pikachu",
         image: "https://cdn.pixabay.com/photo/2020/07/21/16/10/pokemon-5426712_1280.png", 
         ability: ['electric']
-      }, 
+      } 
     ],
     []
   );
@@ -47,12 +49,24 @@ const HomeScreen = () => {
     setmodal(!model);
   }
 
+  const [filters,setFilters] = useState<string>("");
+  const selectedFilter = (data:any)=>{
+    setFilters(data);
+    setmodal(false);
+  }
+
+  const [search,setSearch] = useState('');
+  const searchTextHandler = (data:any)=>{
+    setSearch(data);
+  }
+
+  
 
 
   return (
     <View style={[styles.container, { backgroundColor: theme.colors.background }]}>
       <ScreenWrapper>
-        <Header title="" isIcon={true} iconsType={['switch', 'filter']} filterOpen={handleOpen} />
+        <Header title="" isIcon={true} iconsType={['switch', 'fav', 'filter']} filterOpen={handleOpen}/>
 
         <View style={styles.contentContainer}>
           {theme.isDark ? (
@@ -62,8 +76,10 @@ const HomeScreen = () => {
           )}
 
           <Text style={[styles.description, { color: theme.isDark ? "#fff" : "#000" }]}>
-            Search for Pokémon by name or using the National Pokédex number.
+           Search for Pokémon by name or using the National Pokédex number.
           </Text>
+
+          <SearchBar placeHolderText="What Pokémon are you looking for?" handlerFunc={searchTextHandler}/>
 
           <FlatList
             data={pokemonData}
@@ -84,7 +100,7 @@ const HomeScreen = () => {
         </View>
       </ScreenWrapper>
 
-      <FilterModal model={model} setModalHandler={handleOpen}/>
+      <FilterModal model={model} setModalHandler={handleOpen} selectedFilter={selectedFilter}/>
 
     </View>
   );

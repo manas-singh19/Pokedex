@@ -5,6 +5,7 @@ import { useTheme } from "../theme/themeProviderProps";
 
 import HomeScreen from "../screens/home";
 import DetailsScreen from "../screens/details";
+import FavoriteScreen from '../screens/favorite';
 
 const Stack = createNativeStackNavigator();
 
@@ -33,16 +34,25 @@ export function MainStack() {
           name="HomeScreen"
           component={HomeScreen}
           options={{ 
-            statusBarStyle: "dark", // "light" or "dark"  
+            statusBarStyle: theme.theme.isDark? "light":"dark", // "light" or "dark"  
             statusBarBackgroundColor: '#000', // Set status bar color
           }}
         /> 
 
         <Stack.Screen
           name="DetailsScreen"
-          component={DetailsScreen}
+          component={(props: any) => <DetailsScreen {...props} />}
           options={{ 
-            statusBarStyle: "dark", // "light" or "dark"  
+            statusBarStyle: theme.theme.isDark? "light":"dark", // "light" or "dark"  
+            statusBarBackgroundColor: '#000', // Set status bar color
+          }}
+        /> 
+
+        <Stack.Screen
+          name="FavoriteScreen"
+          component={FavoriteScreen}
+          options={{ 
+            statusBarStyle: theme.theme.isDark? "light":"dark", // "light" or "dark"  
             statusBarBackgroundColor: '#000', // Set status bar color
           }}
         />

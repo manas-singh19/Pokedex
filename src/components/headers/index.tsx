@@ -2,19 +2,23 @@ import React, { memo, useMemo } from 'react';
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { useTheme } from '../../theme/themeProviderProps';
 import AppIcons from '../../utility/icons';
+import { useNavigation } from '@react-navigation/native';
+
 
 interface HeaderProps {
   title: string;
   isIcon?: boolean;
   iconsType?: string[];
-  filterOpen: () => void;
-  
+  filterOpen: () => void; 
 }
 
-const Header: React.FC<HeaderProps> = ({ title, isIcon, iconsType, filterOpen}) => {
+const Header: React.FC<HeaderProps> = ({ title, isIcon, iconsType, filterOpen }) => {
   const theme = useTheme();
   const { toggleTheme } = theme; // Removed duplicate `useTheme()`
-
+  const navigation = useNavigation();
+  const navigateToFav = () => {
+    navigation.navigate('FavoriteScreen' as never);
+  }
   // Memoize icon rendering to prevent unnecessary re-renders
   const renderIcons = useMemo(() => {
     if (!isIcon || !iconsType) return null;
@@ -25,14 +29,18 @@ const Header: React.FC<HeaderProps> = ({ title, isIcon, iconsType, filterOpen}) 
 
       switch (icon) {
         case 'switch':
-          IconComponent = theme.theme.isDark ? <AppIcons.ThemeWhite width={19} fill="black" /> : <AppIcons.ThemeDark width={19} fill="black" />;
+          IconComponent = theme.theme.isDark ? <AppIcons.ThemeWhite width={19} fill="white" /> : <AppIcons.ThemeDark width={19} fill="black" />;
           onPressHandler = toggleTheme;
           break;
         case 'sort':
-          IconComponent = theme.theme.isDark ? <AppIcons.SortWhite width={30} fill="black" /> : <AppIcons.Sort width={30} fill="black" />;
+          IconComponent = theme.theme.isDark ? <AppIcons.SortWhite width={30} fill="white" /> : <AppIcons.Sort width={30} fill="black" />;
+          break; 
+        case 'fav':
+          IconComponent = theme.theme.isDark ? <AppIcons.Heart width={22} fill="white" /> : <AppIcons.HeartBlack width={22} fill="black" />;
+          onPressHandler = navigateToFav;
           break;
         case 'filter':
-          IconComponent = theme.theme.isDark ? <AppIcons.FilterWhite width={30} fill="black" /> : <AppIcons.Filter width={30} fill="black" />;
+          IconComponent = theme.theme.isDark ? <AppIcons.FilterWhite width={30} fill="white" /> : <AppIcons.Filter width={30} fill="black" />;
           onPressHandler = filterOpen;
           break;
         default:
