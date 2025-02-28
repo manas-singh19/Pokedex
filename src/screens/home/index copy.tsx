@@ -35,17 +35,11 @@ const HomeScreen = () => {
     setSearch(data);
   }
    
-
+  
    
   useEffect(()=>{
     console.log("pokemonList: ", pokemonList); 
   },[]);  
-
-
-  type PokemonType = keyof typeof PokemonCardBackgroundColor; 
-  const getColor = (type: PokemonType) => {
-      return PokemonCardBackgroundColor[type] || "orange"; // Default color if type is missing
-  };
 
 
   return (
@@ -71,7 +65,45 @@ const HomeScreen = () => {
             keyExtractor={(item) => item.id.toString()}
             renderItem={({ item }) => (
               <PokemonCard
-                color={getColor(item.color as PokemonType)}
+                color={
+                  item.color ==='bug'?
+                  PokemonCardBackgroundColor.bug:
+                  item.color ==='dark'?
+                  PokemonCardBackgroundColor.dark:
+                  item.color ==='dragon'?
+                  PokemonCardBackgroundColor.dragon:
+                  item.color ==='electric'?
+                  PokemonCardBackgroundColor.electric:
+                  item.color ==='fairy'?
+                  PokemonCardBackgroundColor.fairy:
+                  item.color ==='fighting'?
+                  PokemonCardBackgroundColor.fighting:
+                  item.color ==='fire'?
+                  PokemonCardBackgroundColor.fire:
+                  item.color ==='flying'?
+                  PokemonCardBackgroundColor.flying:
+                  item.color ==='ghost'?
+                  PokemonCardBackgroundColor.ghost:
+                  item.color ==='grass'?
+                  PokemonCardBackgroundColor.grass:
+                  item.color ==='ground'?
+                  PokemonCardBackgroundColor.ground:
+                  item.color ==='ice'?
+                  PokemonCardBackgroundColor.ice:
+                  item.color ==='normal'?
+                  PokemonCardBackgroundColor.normal:
+                  item.color ==='poison'?
+                  PokemonCardBackgroundColor.poison:
+                  item.color ==='psychic'?
+                  PokemonCardBackgroundColor.psychic:
+                  item.color ==='rock'?
+                  PokemonCardBackgroundColor.rock:
+                  item.color ==='steel'?
+                  PokemonCardBackgroundColor.steel:
+                  item.color ==='water'?
+                  PokemonCardBackgroundColor.water:
+                  'orange'
+                }
                 titleCode={item.titleCode}
                 name={item.name}
                 image={item.image}
