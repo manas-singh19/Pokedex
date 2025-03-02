@@ -8,7 +8,7 @@ import AppIcons from '../../utility/icons';
 import FilterModal from '../../components/filter';
 import SearchBar from '../../components/search';
 import { PokemonCardBackgroundColor } from "../../utility/pokemonColor";
-import usePokemonData from './appcall';
+import usePokemonData from './apicall';
 
 const HomeScreen = () => {
   const { theme } = useTheme();

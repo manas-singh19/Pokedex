@@ -1,16 +1,29 @@
 import { StyleSheet, Text, View, Image, TouchableOpacity,ScrollView } from 'react-native';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import ScreenWrapper from '../../components/screenWrapper';
 import HeaderBack from '../../components/headers/headerBack';
-import { RouteProp } from '@react-navigation/native';
+import { RouteProp, useFocusEffect } from '@react-navigation/native';
 import { useTheme } from '../../theme/themeProviderProps';
  
 import AppIcons from '../../utility/icons'; 
 import { FadeInLeft } from 'react-native-reanimated';
+import getPokemonData from './apiCall';
 
 // Define the route params type
 type RootStackParamList = {
   Details: { id?: number; name?: string; color?: string, ability:string[] };
+};
+
+// Define the PokemonDetail type
+type PokemonDetail = {
+    id: number;
+    name: string;
+    height: number;
+    weight: number;
+    abilities: { ability: { name: string } }[];
+    species: { name: string };
+    base_experience: string;
+    sprites:any
 };
 
 type DetailsScreenRouteProp = RouteProp<RootStackParamList, 'Details'>;
@@ -24,15 +37,30 @@ const DetailsScreen: React.FC<DetailsScreenProps> = ({ route }) => {
 
   const { theme } = useTheme(); 
 
-  useEffect(() => {
-    console.log('Details Screen Params:', { id, name, color });
-  }, [id, name, color]);
+    
+  const [activeSection,setactiveSection] = useState('about');  
 
-  
-  const [activeSection,setactiveSection] = useState('about');
+  const { pokemonDetails, isLoading, pokemonDetailSpecies } = getPokemonData(id);
+    
 
+  useFocusEffect(
+    useCallback(() => {  
+      if (pokemonDetails) {
+        console.log("screen went in focus. --  --- ")
+        console.log("Pokemon Details:", pokemonDetails);
+        console.log("pokemonDetailSpecies: ",pokemonDetailSpecies);
  
-  
+        console.log("images: ",pokemonDetails.sprites.other.home.front_default);
+       
+      }
+      return () => {  
+        console.log('Screen went out of focus');  
+      };
+    }, [])
+  ); 
+    
+
+
     // Define TypeScript types
     type StatDetail = {
         value: number;
@@ -62,6 +90,12 @@ const DetailsScreen: React.FC<DetailsScreenProps> = ({ route }) => {
         total: { value: 319, min: 0, max: 0, bar: 0 },
     });
 
+  const [details,setDetails] = useState();
+
+
+
+ 
+
   return (
     <ScreenWrapper>
       <HeaderBack title="Pokemon Details" back={true} color={color || '#ffffff'} normal={false} />
@@ -71,12 +105,20 @@ const DetailsScreen: React.FC<DetailsScreenProps> = ({ route }) => {
         <Text style={styles.text}>Pokemon Name: {name}</Text> */}
         <View style={{height:'25%', backgroundColor:'transparent', justifyContent:'center'}}>
             <View style={styles.innerUpperContainer}>
-                <View style={styles.innerUpperContainerImage}>
-                 <Image source={{ uri: 'https://cdn.pixabay.com/photo/2020/07/21/16/10/pokemon-5426712_1280.png' }} style={styles.pokemonImage} />
+                <View style={styles.innerUpperContainerImage}> 
+                  {/* {pokemonDetails && (
+                    <Image source={{ uri: `${pokemonDetails.sprites.other.home.front_default}` }} style={styles.pokemonImage} />
+                  )} */}
+                   {pokemonDetails && pokemonDetails.sprites.other['official-artwork'].front_default && (
+                        <Image 
+                        source={{ uri: pokemonDetails.sprites.other['official-artwork'].front_default }} 
+                        style={styles.pokemonImage} 
+                        />
+                    )}
                 </View>
                 <View style={styles.innerUpperContainerText}>
-                    <Text style={[styles.titleCode, {fontWeight:theme.fontWeights.bold}]}>#112</Text>
-                    <Text style={[styles.name,{fontWeight:theme.fontWeights.extraBold}]}>{name}</Text>
+                    <Text style={[styles.titleCode, {fontWeight:theme.fontWeights.bold}]}># {id}</Text>
+                    <Text style={[styles.name,{fontWeight:theme.fontWeights.extraBold, textTransform:'capitalize'}]}>{name}</Text>
                     <View style={{
                         width: '100%',
                         flexDirection: 'row',
@@ -142,7 +184,7 @@ const DetailsScreen: React.FC<DetailsScreenProps> = ({ route }) => {
                             fontWeight:theme.fontWeights.normal,
                             color:theme.isDark?'#fff':'#000',
                             
-                        }}>Bulbasaur can be seen napping in bright sunlight. There is a seed on its back. By soaking up the sun's rays, the seed grows progressively larger.</Text>       
+                        }}>{pokemonDetailSpecies ? pokemonDetailSpecies.flavor_text_entries[0].flavor_text.replace(/[\n\f]/g, ' ') : 'N/A'}</Text>       
 
                         {/* Start: Pokedex Data  */}
                         <View style={{marginVertical:28}}>
@@ -154,24 +196,35 @@ const DetailsScreen: React.FC<DetailsScreenProps> = ({ route }) => {
                             <View style={styles.tableData}>
                                 <View style={styles.tableDataRow}>
                                     <Text style={[styles.tableText,{width:'40%',color:theme.isDark?'#fff':'#000'}]}>Species</Text>
-                                    <Text style={[styles.tableText,{width:'60%',color:theme.isDark?'#fff':'#000'}]}>Seed Pokémon</Text>
+                                    <Text style={[styles.tableText,{width:'60%',color:theme.isDark?'#fff':'#000', textTransform:'capitalize'}]}>{pokemonDetails ? pokemonDetails.species.name : 'N/A'}</Text>
                                 </View>
                                 <View style={styles.tableDataRow}>
                                     <Text style={[styles.tableText,{width:'40%',color:theme.isDark?'#fff':'#000'}]}>Height</Text>
-                                    <Text style={[styles.tableText,{width:'60%',color:theme.isDark?'#fff':'#000'}]}>Seed Pokémon</Text>
+                                    <Text style={[styles.tableText,{width:'60%',color:theme.isDark?'#fff':'#000'}]}>{pokemonDetails ? pokemonDetails.height : 'N/A'}</Text>
                                 </View>
                                 <View style={styles.tableDataRow}>
                                     <Text style={[styles.tableText,{width:'40%',color:theme.isDark?'#fff':'#000'}]}>Weight</Text>
-                                    <Text style={[styles.tableText,{width:'60%',color:theme.isDark?'#fff':'#000'}]}>Seed Pokémon</Text>
+                                    <Text style={[styles.tableText,{width:'60%',color:theme.isDark?'#fff':'#000'}]}>{pokemonDetails ? pokemonDetails.weight : 'N/A'}</Text>
                                 </View>
                                 <View style={styles.tableDataRow}>
-                                    <Text style={[styles.tableText,{width:'40%',color:theme.isDark?'#fff':'#000'}]}>Abilities</Text>
-                                    <Text style={[styles.tableText,{width:'60%',color:theme.isDark?'#fff':'#000'}]}>Seed Pokémon</Text>
+                                        <Text style={[styles.tableText, { width: '40%', color: theme.isDark ? '#fff' : '#000' }]}>
+                                            Abilities
+                                        </Text>
+                                        <View style={{ width: '60%', flexDirection:'row', flexWrap:'wrap' }}>
+                                            {pokemonDetails?.abilities?.length > 0 ? (
+                                                pokemonDetails.abilities.map((item:any, index:number) => (
+                                                    <Text key={index} style={[styles.tableText, { color: theme.isDark ? '#fff' : '#000' } ,index==0?{marginLeft:0}:{marginLeft:4}, {textTransform:'capitalize'}]}>
+                                                        {item.ability.name},
+                                                    </Text>
+                                                ))
+                                            ) : (
+                                                <Text style={[styles.tableText, { color: theme.isDark ? '#fff' : '#000' }]}>
+                                                    N/A
+                                                </Text>
+                                            )}
+                                        </View>
                                 </View>
-                                <View style={styles.tableDataRow}>
-                                    <Text style={[styles.tableText,{width:'40%',color:theme.isDark?'#fff':'#000'}]}>Weaknesses</Text>
-                                    <Text style={[styles.tableText,{width:'60%',color:theme.isDark?'#fff':'#000'}]}>Seed Pokémon</Text>
-                                </View>
+                             
                             </View>
                         </View>
                         {/* End: Pokedex Data  */}
@@ -185,25 +238,21 @@ const DetailsScreen: React.FC<DetailsScreenProps> = ({ route }) => {
                             }}>Training</Text>
                             <View style={styles.tableData}>
                                 <View style={styles.tableDataRow}>
-                                    <Text style={[styles.tableText,{width:'40%', color:theme.isDark?'#fff':'#000',}]}>EV Yield</Text>
-                                    <Text style={[styles.tableText,{width:'60%', color:theme.isDark?'#fff':'#000',}]}>1 Special Attack</Text>
+                                    <Text style={[styles.tableText,{width:'40%', color:theme.isDark?'#fff':'#000',}]}>Generation</Text>
+                                    <Text style={[styles.tableText,{width:'60%', color:theme.isDark?'#fff':'#000',textTransform:'capitalize'}]}>{pokemonDetailSpecies?pokemonDetailSpecies.generation.name.replace("-"," "):"N/A"}</Text>
                                 </View>
                                 <View style={styles.tableDataRow}>
                                     <Text style={[styles.tableText,{width:'40%',color:theme.isDark?'#fff':'#000',}]}>Catch Rate</Text>
-                                    <Text style={[styles.tableText,{width:'60%',color:theme.isDark?'#fff':'#000'}]}>45 (5.9% with PokéBall, full HP)</Text>
-                                </View>
-                                <View style={styles.tableDataRow}>
-                                    <Text style={[styles.tableText,{width:'40%',color:theme.isDark?'#fff':'#000'}]}>Base Friendship</Text>
-                                    <Text style={[styles.tableText,{width:'60%',color:theme.isDark?'#fff':'#000'}]}>70 (normal)</Text>
-                                </View>
-                                <View style={styles.tableDataRow}>
-                                    <Text style={[styles.tableText,{width:'40%',color:theme.isDark?'#fff':'#000'}]}>Base Exp</Text>
-                                    <Text style={[styles.tableText,{width:'60%',color:theme.isDark?'#fff':'#000'}]}>64</Text>
+                                    <Text style={[styles.tableText,{width:'60%',color:theme.isDark?'#fff':'#000'}]}>{pokemonDetailSpecies?pokemonDetailSpecies.capture_rate:"N/A"}</Text>
                                 </View>
                                 <View style={styles.tableDataRow}>
                                     <Text style={[styles.tableText,{width:'40%',color:theme.isDark?'#fff':'#000'}]}>Growth Rate</Text>
-                                    <Text style={[styles.tableText,{width:'60%',color:theme.isDark?'#fff':'#000'}]}>Medium Slow</Text>
+                                    <Text style={[styles.tableText,{width:'60%',color:theme.isDark?'#fff':'#000', textTransform:'capitalize'}]}>{pokemonDetailSpecies?pokemonDetailSpecies.growth_rate.name.replace("-"," "):"N/A"}</Text>
                                 </View>
+                                <View style={styles.tableDataRow}>
+                                    <Text style={[styles.tableText,{width:'40%',color:theme.isDark?'#fff':'#000'}]}>Base Exp</Text>
+                                    <Text style={[styles.tableText,{width:'60%',color:theme.isDark?'#fff':'#000'}]}> {pokemonDetails ? pokemonDetails.base_experience : 'N/A'}</Text>
+                                </View> 
                             </View>
                         </View>
                         {/* End: Tranning */} 
