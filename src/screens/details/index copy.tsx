@@ -351,74 +351,61 @@ const DetailsScreen: React.FC<DetailsScreenProps> = ({ route }) => {
               
             {
                 activeSection == 'evolution' &&(
-                    <View 
-  style={{
-    width: '100%', 
-    height: '92%', 
-    backgroundColor: theme.colors.background, 
-    borderTopEndRadius: 22, 
-    borderTopStartRadius: 22, 
-    padding: 18, 
-    paddingTop: 0, 
-    paddingBottom: 0
-  }}
-> 
-  <ScrollView showsVerticalScrollIndicator={false}>
-    <View style={{ marginVertical: 28 }}>
-      <Text 
-        style={{
-          fontSize: theme.fonts.b2,
-          fontWeight: theme.fontWeights.exExtraBold,
-          color: color
-        }}
-      >
-        Evolution Chart
-      </Text>
+                    <View style={{width:'100%', height:'92%', backgroundColor:theme.colors.background, borderTopEndRadius:22, borderTopStartRadius:22, padding:18, paddingTop:0, paddingBottom:0}}> 
+                            <ScrollView showsVerticalScrollIndicator={false}>
+                                <View style={{marginVertical:28}}>
+                                    <Text style={{
+                                        fontSize:theme.fonts.b2,
+                                        fontWeight:theme.fontWeights.exExtraBold,
+                                        color:color
+                                    }}>Evolution Chart</Text>
+                                    
+                                    {
+                                      evolutionChain.map((item:any,index:any)=>(
+                                        <View style={styles.evolutionChartContainer}>
+                                            <View style={[styles.evolutionChartContaineritem,{width:'40%'}]}>
+                                                <Image source={{ uri: `${item.image}` }} style={{width:90, height:100}} /> 
+                                                <Text style={[styles.evolutionCharttext,{color:theme.isDark?'#fff':'#000'}]}>{item.name}</Text>
+                                            </View>
+                                            <View style={[styles.evolutionChartContaineritem,{width:'20%'}]}> 
+                                                {
+                                                    theme.isDark?
+                                                    <AppIcons.LevelUpWhite  width={'40%'} height={50} fill="white"/>
+                                                    :
+                                                    <AppIcons.LevelUp  width={'50%'} height={50} fill="white"/>
+                                                }
+                                            </View>
+                                            <View style={[styles.evolutionChartContaineritem,{width:'40%'}]}>
+                                                <Image source={{ uri: `${item.image}` }} style={{width:90, height:100}} />
+                                                
+                                                <Text style={[styles.evolutionCharttext,{color:theme.isDark?'#fff':'#000'}]}>{item.name}</Text>
+                                            </View>
+                                        </View> 
+                                      ))  
+                                    }
+                                    {/* <View style={styles.evolutionChartContainer}>
+                                        <View style={[styles.evolutionChartContaineritem,{width:'40%'}]}>
+                                            <Image source={{ uri: 'https://cdn.pixabay.com/photo/2020/07/21/16/10/pokemon-5426712_1280.png' }} style={{width:90, height:100}} /> 
+                                            <Text style={[styles.evolutionCharttext,{color:theme.isDark?'#fff':'#000'}]}>Bulbasaur</Text>
+                                        </View>
+                                        <View style={[styles.evolutionChartContaineritem,{width:'20%'}]}> 
+                                            {
+                                                theme.isDark?
+                                                <AppIcons.LevelUpWhite  width={'40%'} height={50} fill="white"/>
+                                                :
+                                                <AppIcons.LevelUp  width={'50%'} height={50} fill="white"/>
+                                            }
+                                        </View>
+                                        <View style={[styles.evolutionChartContaineritem,{width:'40%'}]}>
+                                            <Image source={{ uri: 'https://cdn.pixabay.com/photo/2020/07/21/16/10/pokemon-5426712_1280.png' }} style={{width:90, height:100}} />
+                                             
+                                            <Text style={[styles.evolutionCharttext,{color:theme.isDark?'#fff':'#000'}]}>Bulbasaur</Text>
+                                        </View>
+                                    </View>  */}
 
-      {evolutionChain.length > 0 ? (
-        evolutionChain.map((item: any, index: number) => {
-          const nextEvolution = evolutionChain[index + 1];
-          return (
-            <View key={index} style={styles.evolutionChartContainer}>
-              {/* Current Evolution Stage */}
-              <View style={[styles.evolutionChartContaineritem, { width: '40%' }]}>
-                <Image source={{ uri: item.image }} style={{ width: 90, height: 100 }} />
-                <Text style={[styles.evolutionCharttext, { color: theme.isDark ? '#fff' : '#000' }]}>
-                  {item.name}
-                </Text>
-              </View>
-
-              {/* Evolution Arrow (If next stage exists) */}
-              {nextEvolution && (
-                <View style={[styles.evolutionChartContaineritem, { width: '20%' }]}>
-                  {theme.isDark ? (
-                    <AppIcons.LevelUpWhite width={'40%'} height={50} fill="white" />
-                  ) : (
-                    <AppIcons.LevelUp width={'50%'} height={50} fill="white" />
-                  )}
-                </View>
-              )}
-
-              {/* Next Evolution Stage */}
-              {nextEvolution && (
-                <View style={[styles.evolutionChartContaineritem, { width: '40%' }]}>
-                  <Image source={{ uri: nextEvolution.image }} style={{ width: 90, height: 100 }} />
-                  <Text style={[styles.evolutionCharttext, { color: theme.isDark ? '#fff' : '#000' }]}>
-                    {nextEvolution.name}
-                  </Text>
-                </View>
-              )}
-            </View>
-          );
-        })
-      ) : (
-        <Text style={{ color: theme.isDark ? '#fff' : '#000', textAlign: 'center', marginTop: 20 }}>
-          No Evolution Data Available
-        </Text>
-      )}
-    </View>
-  </ScrollView>
-</View>
+                                </View>    
+                            </ScrollView>
+                    </View> 
                 )
             } 
 

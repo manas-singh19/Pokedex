@@ -13,17 +13,15 @@ interface PokemonDetail {
   stats: any;
 }
 
-interface EvolutionStage {
-  id: number;
+interface EvolutionData {
   name: string;
   image: string;
-  level: number | null;
 }
 
 const getPokemonData = (pokemonId: number | undefined) => {
   const [pokemonDetails, setPokemonDetails] = useState<PokemonDetail | null>(null);
   const [pokemonDetailSpecies, setPokemonDetailSpecies] = useState<any>(null);
-  const [evolutionChain, setEvolutionChain] = useState<EvolutionStage[]>([]);
+  const [evolutionChain, setEvolutionChain] = useState<EvolutionData[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
@@ -59,7 +57,7 @@ const getPokemonData = (pokemonId: number | undefined) => {
       try {
         const evolutionResponse = await ApiService.GetWithoutHeader(`evolution-chain/${evolutionId}`);
         if (evolutionResponse?.data) {
-          const evolutionData = await extractEvolutionData(evolutionResponse.data);
+          const evolutionData = extractEvolutionData(evolutionResponse.data);
           setEvolutionChain(evolutionData);
         }
       } catch (error) {
@@ -67,23 +65,25 @@ const getPokemonData = (pokemonId: number | undefined) => {
       }
     };
 
-    const extractEvolutionData = async (data: any): Promise<EvolutionStage[]> => {
-      let evolutions: EvolutionStage[] = [];
-      let currentChain = data.chain;
+    const extractEvolutionData = (data: any): EvolutionData[] => {
+      let evolutions: EvolutionData[] = [];
 
-      while (currentChain) {
-        const name = currentChain.species.name;
-        const level = currentChain.evolution_details?.[0]?.min_level || null;
+      const traverseEvolution = async (chain: any) => {
+        if (!chain) return;
 
+        const name = chain.species.name;
         const pokemonResponse = await ApiService.GetWithoutHeader(`pokemon/${name}`);
         const image = pokemonResponse?.data?.sprites?.other?.["official-artwork"]?.front_default || "";
-        const id = pokemonResponse?.data?.id || null;
 
-        evolutions.push({ id, name, image, level });
+        evolutions.push({ name, image });
 
-        currentChain = currentChain.evolves_to?.[0] || null;
-      }
+        if (chain.evolves_to.length > 0) {
+          await traverseEvolution(chain.evolves_to[0]); // Get next evolution stage
+        }
+      };
 
+      traverseEvolution(data.chain);
+      console.log("evolution: ",evolutions);
       return evolutions;
     };
 
