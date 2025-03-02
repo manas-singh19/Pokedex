@@ -10,6 +10,7 @@ interface PokemonDetail {
   species: { name: string };
   base_experience: string;
   sprites:any;
+  stats:any
 }
 
 const getPokemonData = (pokemonId: number | undefined) => {

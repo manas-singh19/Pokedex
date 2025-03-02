@@ -24,6 +24,7 @@ type PokemonDetail = {
     species: { name: string };
     base_experience: string;
     sprites:any
+    stats:any;
 };
 
 type DetailsScreenRouteProp = RouteProp<RootStackParamList, 'Details'>;
@@ -42,59 +43,48 @@ const DetailsScreen: React.FC<DetailsScreenProps> = ({ route }) => {
 
   const { pokemonDetails, isLoading, pokemonDetailSpecies } = getPokemonData(id);
     
-
-  useFocusEffect(
-    useCallback(() => {  
-      if (pokemonDetails) {
-        console.log("screen went in focus. --  --- ")
-        console.log("Pokemon Details:", pokemonDetails);
-        console.log("pokemonDetailSpecies: ",pokemonDetailSpecies);
  
-        console.log("images: ",pokemonDetails.sprites.other.home.front_default);
-       
-      }
-      return () => {  
-        console.log('Screen went out of focus');  
-      };
-    }, [])
-  ); 
-    
-
-
-    // Define TypeScript types
-    type StatDetail = {
-        value: number;
-        min: number;
-        max: number;
-        bar: number;
-    };
-  
-  type Stats = {
-    hp: StatDetail;
-    attack: StatDetail;
-    defense: StatDetail;
-    SpAtk: StatDetail;
-    SpDef: StatDetail;
-    speed: StatDetail;
-    total: StatDetail;
-  };
-  
     // State initialization
-    const [stats, setStats] = useState<Stats>({
-        hp: { value: 45, min: 200, max: 292, bar: 10 },
-        attack: { value: 21, min: 200, max: 292, bar: 30 },
-        defense: { value: 24, min: 200, max: 292, bar: 43 },
-        SpAtk: { value: 53, min: 200, max: 292, bar: 55 },
-        SpDef: { value: 99, min: 200, max: 292, bar: 74 },
-        speed: { value: 23, min: 200, max: 292, bar: 31 },
-        total: { value: 319, min: 0, max: 0, bar: 0 },
-    });
+    // const [stats, setStats] = useState({
+    //     hp: { value: 8, min: 0, max: 45, bar: 2 },
+    //     attack: { value: 21, min: 200, max: 292, bar: 30 },
+    //     defense: { value: 24, min: 200, max: 292, bar: 43 },
+    //     SpAtk: { value: 53, min: 200, max: 292, bar: 55 },
+    //     SpDef: { value: 99, min: 200, max: 292, bar: 74 },
+    //     speed: { value: 23, min: 200, max: 292, bar: 31 } 
+    // }); 
 
-  const [details,setDetails] = useState();
-
-
-
+    const [stats, setStats] = useState<Record<string, { value: number; min: number; max: number; bar: number }>>({});
  
+    useFocusEffect(
+        useCallback(() => {  
+          if (pokemonDetails) {
+            console.log("screen went in focus. --  --- ")
+            console.log("Pokemon Details:", pokemonDetails);
+            console.log("pokemonDetailSpecies: ",pokemonDetailSpecies); 
+          }
+          return () => {  
+            console.log('Screen went out of focus');  
+          };
+        }, [])
+    ); 
+
+    useEffect(() => {
+        if (!pokemonDetails || !pokemonDetails.stats) return;
+        
+        const updatedStats = pokemonDetails.stats.reduce((acc:any, item:any) => {
+            acc[item.stat.name] = {
+                value: item.base_stat,  // Use base_stat from response
+                min: item.effort,                 // Set appropriate min values
+                max: item.base_stat,               // Set appropriate max values
+                bar: Math.round((item.effort / item.base_stat) * 100), // Calculate bar percentage
+            };
+            return acc;
+        }, {} as Record<string, { value: number; min: number; max: number; bar: number }>);
+        
+        setStats(updatedStats);
+    }, [pokemonDetails]); 
+        
 
   return (
     <ScreenWrapper>
@@ -298,7 +288,7 @@ const DetailsScreen: React.FC<DetailsScreenProps> = ({ route }) => {
                                                             fontSize:theme.fonts.b3,
                                                             fontWeight:theme.fontWeights.normal,
                                                             color:theme.isDark?'#fff':'#000'
-                                                        }}>{value.value}</Text>
+                                                        }}>{(value as { value: number }).value}</Text>
                                                         {
                                                             key != 'total'&&(
                                                                 <View style={{width:'80%', height:6, position:'relative'}}>
@@ -341,23 +331,22 @@ const DetailsScreen: React.FC<DetailsScreenProps> = ({ route }) => {
 
                                                 </View>
                                             </View> 
-                                        ))}  
+                                        ))}   
+
                                         <Text style={{
                                             fontSize:theme.fonts.b4,
                                             fontWeight:theme.fontWeights.normal,
                                             color:theme.isDark?'#fff':'#000',
                                             marginTop:12
                                             
-                                        }}>Bulbasaur can be seen napping in bright sunlight. There is a seed on its back. By soaking up the sun's rays, the seed grows progressively larger.</Text>       
- 
+                                        }}>{pokemonDetailSpecies ? pokemonDetailSpecies.flavor_text_entries[0].flavor_text.replace(/[\n\f]/g, ' ') : 'N/A'}</Text>
 
                                     </View>
                                 </View>
                             </ScrollView>
                     </View> 
                 )
-            }
-
+            } 
               
             {
                 activeSection == 'evolution' &&(
@@ -395,9 +384,7 @@ const DetailsScreen: React.FC<DetailsScreenProps> = ({ route }) => {
                             </ScrollView>
                     </View> 
                 )
-            }
-                                   
-            
+            } 
 
         </View>
         
