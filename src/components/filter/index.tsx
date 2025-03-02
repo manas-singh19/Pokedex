@@ -57,8 +57,8 @@ const FilterModal: React.FC<FilterModalProps> = ({ model, setModalHandler, selec
             {/* Type Section */}
             <Text style={[styles.subtitle, { color: textColor }]}>Type</Text>
             <View style={styles.filterGrid}>
-              {FILTER_TYPES.map((type) => ( 
-                <FilterTypeButton key={type} type={type} filters={filters} onPress={() => selectedFilter(type)} />
+              {FILTER_TYPES.map((type, index) => ( 
+                <FilterTypeButton key={index} type={type} filters={filters} onPress={() => selectedFilter(type)} />
               ))}
             </View>
 
@@ -77,14 +77,14 @@ const FilterModal: React.FC<FilterModalProps> = ({ model, setModalHandler, selec
 //     </TouchableOpacity>
 //   );
 // }
-const FilterTypeButton: React.FC<{ type: string; onPress: () => void; filters: string }> = ({ type, onPress, filters }) => {
+const FilterTypeButton: React.FC<{ type: string; onPress: () => void; filters: string; key:number }> = ({ key, type, onPress, filters }) => {
   const isSelected = filters.includes(type);
   const iconName = isSelected ? `${type}Selected` : type;
   const formattedIconName = iconName.charAt(0).toUpperCase() + iconName.slice(1) as IconKeys;
   const IconComponent = AppIcons[formattedIconName];
 
   return (
-    <TouchableOpacity style={styles.filterTypeButton} onPress={onPress}>
+    <TouchableOpacity key={key} style={styles.filterTypeButton} onPress={onPress}>
       {IconComponent && React.createElement(IconComponent, { width: 60, fill: "white" })}
     </TouchableOpacity>
   );

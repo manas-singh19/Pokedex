@@ -14,14 +14,14 @@ interface PokemonCardProps {
   name: string;
   image: string;
   //ability: Ability[];
-  ability:string[];
+  ability:string[]; 
 }
 
 const PokemonCard: React.FC<PokemonCardProps> = memo(({ id, color, titleCode, name, image, ability }) => {
   const navigation = useNavigation();
   const theme = useTheme();
   return (
-    <TouchableOpacity 
+    <TouchableOpacity
       style={[styles.container, { backgroundColor: color, position:'relative', overflow:'hidden'}]} 
       onPress={() => navigation.navigate('DetailsScreen', { id, name, color, ability })}
     >

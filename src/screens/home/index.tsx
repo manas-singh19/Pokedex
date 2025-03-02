@@ -16,15 +16,16 @@ const HomeScreen = () => {
 
   const [modalVisible, setModalVisible] = useState<boolean>(false);
   const [filters, setFilters] = useState<string>("");
+  let filtersVar = '';
   const [search, setSearch] = useState<string>("");
 
   // Toggle Filter Modal
   const handleOpen = useCallback(() => setModalVisible(prev => !prev), []);
 
-  // Handle filter selection
-  const selectedFilter = useCallback((data: any) => {
-    setFilters(data);
-    setModalVisible(false);
+  // Handle filter selection 
+  const selectedFilter = useCallback((type: string) => {
+    setFilters((prevFilter) => (prevFilter === type ? "" : type)); // Toggle selection
+    setModalVisible(false); // Close modal after selection
   }, []);
 
   // Handle search input
