@@ -89,7 +89,7 @@ const HomeScreen = () => {
         </View>
       </ScreenWrapper>
 
-      <FilterModal model={modalVisible} setModalHandler={handleOpen} selectedFilter={selectedFilter} />
+      <FilterModal model={modalVisible} setModalHandler={handleOpen} selectedFilter={selectedFilter} filters={filters}/>
     </View>
   );
 };

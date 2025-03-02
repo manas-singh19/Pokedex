@@ -8,16 +8,21 @@ import { useTheme } from '../../theme/themeProviderProps';
 
 interface FilterModalProps {
   model: boolean;
+  filters:string;
   setModalHandler: (value: boolean) => void;
   selectedFilter: (type: string) => void;
 }
 
 const FILTER_TYPES = [
   'bug', 'dark', 'dragon', 'electric', 'fairy', 'fighting', 'fire', 'flying', 'ghost', 
-  'grass', 'ground', 'ice', 'normal', 'poison', 'psychic', 'rock', 'steel', 'water'
+  'grass', 'ground', 'ice', 'normal', 'poison', 'psychic', 'rock', 'steel', 'water',
+
+  // 'bugSelected', 'darkSelected', 'dragonSelected', 'electricSelected', 'fairySelected', 'fightingSelected', 
+  // 'fireSelected', 'flyingSelected', 'ghostSelected', 
+  // 'grassSelected', 'groundSelected', 'iceSelected', 'normalSelected', 'poisonSelected', 'psychicSelected', 'rockSelected', 'steelSelected', 'waterSelected',
 ];
 
-const FilterModal: React.FC<FilterModalProps> = ({ model, setModalHandler, selectedFilter }) => {
+const FilterModal: React.FC<FilterModalProps> = ({ model, setModalHandler, selectedFilter,filters }) => {
   const { theme } = useTheme(); 
   const textColor = theme.isDark ? "#fff" : "#000";
   const bgColor = theme.colors.background;
@@ -52,8 +57,8 @@ const FilterModal: React.FC<FilterModalProps> = ({ model, setModalHandler, selec
             {/* Type Section */}
             <Text style={[styles.subtitle, { color: textColor }]}>Type</Text>
             <View style={styles.filterGrid}>
-              {FILTER_TYPES.map((type) => (
-                <FilterTypeButton key={type} type={type} onPress={() => selectedFilter(type)} />
+              {FILTER_TYPES.map((type) => ( 
+                <FilterTypeButton key={type} type={type} filters={filters} onPress={() => selectedFilter(type)} />
               ))}
             </View>
 
@@ -64,14 +69,26 @@ const FilterModal: React.FC<FilterModalProps> = ({ model, setModalHandler, selec
   );
 };
 
-const FilterTypeButton: React.FC<{ type: string; onPress: () => void }> = ({ type, onPress }) => {
-  const IconComponent = AppIcons[type.charAt(0).toUpperCase() + type.slice(1) as IconKeys];
+// const FilterTypeButton: React.FC<{ type: string; onPress: () => void; filters: string }> = ({ type, onPress, filters }) => {
+//   const IconComponent = AppIcons[type.charAt(0).toUpperCase() + type.slice(1) as IconKeys]; 
+//   return (
+//     <TouchableOpacity style={styles.filterTypeButton} onPress={onPress}> 
+//       {React.createElement(IconComponent, { width: 25, fill: "white" })}
+//     </TouchableOpacity>
+//   );
+// }
+const FilterTypeButton: React.FC<{ type: string; onPress: () => void; filters: string }> = ({ type, onPress, filters }) => {
+  const isSelected = filters.includes(type);
+  const iconName = isSelected ? `${type}Selected` : type;
+  const formattedIconName = iconName.charAt(0).toUpperCase() + iconName.slice(1) as IconKeys;
+  const IconComponent = AppIcons[formattedIconName];
+
   return (
     <TouchableOpacity style={styles.filterTypeButton} onPress={onPress}>
-      {React.createElement(IconComponent, { width: 25, fill: "black" })}
+      {IconComponent && React.createElement(IconComponent, { width: 60, fill: "white" })}
     </TouchableOpacity>
   );
-}
+};
 
 export default FilterModal;
 
@@ -130,7 +147,7 @@ const styles = StyleSheet.create({
   filterTypeButton: {
     width: 45,
     height: 45,
-    backgroundColor: '#f1f1f1',
+    //backgroundColor: '#f1f1f1',
     borderRadius: 20,
     margin: 6,
     justifyContent: 'center',
