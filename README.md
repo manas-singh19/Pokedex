@@ -5,6 +5,29 @@ npx react-native-asset
 npx react-native run-android >** for andorid 
 npx react-native run-ios >** for ios 
 
+`` cd android ``
+`` ./gradlew clean ``
+`` ./gradlew assembleRelease ``
+`` ./gradlew installRelease ``
+`` ./gradlew bundleRelease ``
+
+# Getting Started
+
+``` Node Version: 18.19.0 ``` 
+``` Npm version: 10.2.3 ```
+``` Java version: 17 ```
+``` React Native Version: 0.73.6 ```
+
+``` Version number: 11.8.2 ``` 
+``` Build Tools Version: 35.0.0```
+``` Min sdk version: 24 ``` 
+``` Target sdk version: 35 ```
+``` Compile sdk version: 35 ```
+``` Kotlin Version: 2.0.21 ```
+``` Build Tools Version: 34.0.0 ```
+``` NDK Version: 27.1.12297006```
+ 
+
 
 <!-- This is a new [**React Native**](https://reactnative.dev) project, bootstrapped using [`@react-native-community/cli`](https://github.com/react-native-community/cli).
 

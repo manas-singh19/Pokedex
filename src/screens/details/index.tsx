@@ -144,8 +144,7 @@ const DetailsScreen: React.FC<DetailsScreenProps> = ({ route }) => {
                 :
                 <AppIcons.Heart width={30} 
                  // fill="white"
-                 fill="white"
-                 
+                 fill="white" 
                 /> 
             } 
         </TouchableOpacity>
