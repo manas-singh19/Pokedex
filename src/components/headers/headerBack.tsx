@@ -35,7 +35,7 @@ const HeaderBack: React.FC<HeaderProps> = ({ title, back, color, normal}) => {
       }}>
         <TouchableOpacity style={{flexDirection:'row', alignContent:'center', alignItems:'center'}} onPress={()=>{navigation.goBack()}}>
             {
-              theme.theme.isDark?<AppIcons.Back width={22} fill="black" />:<AppIcons.BackBlack width={22} fill="black" />
+              theme.theme.isDark?<AppIcons.Back width={18} fill="black" />:<AppIcons.BackBlack width={18} fill="black" />
             }  
             {
               normal&&( 

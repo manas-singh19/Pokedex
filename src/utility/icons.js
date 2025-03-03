@@ -133,6 +133,7 @@ import Search from '../../assets/icons/search.svg';
 
 import HeartBlack from '../../assets/icons/HeartBlack.svg';
 import Heart from '../../assets/icons/Heart.svg';
+import HeartColor from '../../assets/icons/HeartColor.svg';
 
 const AppIcons = {
 
@@ -229,7 +230,8 @@ const AppIcons = {
   LevelUp,
   LevelUpWhite,
   HeartBlack,
-  Heart
+  Heart,
+  HeartColor
 };
 
 export default AppIcons;

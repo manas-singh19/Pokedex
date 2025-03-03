@@ -5,9 +5,10 @@ import HeaderBack from '../../components/headers/headerBack';
 import { RouteProp, useFocusEffect } from '@react-navigation/native';
 import { useTheme } from '../../theme/themeProviderProps';
  
-import AppIcons from '../../utility/icons'; 
-import { FadeInLeft } from 'react-native-reanimated';
+import AppIcons from '../../utility/icons';  
 import getPokemonData from './apiCall';
+
+import AsyncStorage from '@react-native-async-storage/async-storage';
  
 // Define the route params type
 type RootStackParamList = {
@@ -85,15 +86,70 @@ const DetailsScreen: React.FC<DetailsScreenProps> = ({ route }) => {
         
         setStats(updatedStats);
     }, [pokemonDetails]); 
+
+    const [favoritePokemon, setFavoritePokemon] = useState<number[]>([]);
+    useEffect(()=>{
+        console.log("favoritePokemon:", favoritePokemon);
+    },[favoritePokemon]);
+
+    // Load favorites from LocalStorage when the component mounts
+    useEffect(() => {
+      const loadFavorites = async () => {
+        const storedFavorites = await AsyncStorage.getItem('favoritePokemon');
+        if (storedFavorites) {
+          setFavoritePokemon(JSON.parse(storedFavorites));
+        }
+      };
+      loadFavorites();
+    }, []);
+    
+    // Function to handle favorite/unfavorite logic
+    const favHandler = async (id: number) => {
+      try {
+        let updatedFavorites = [...favoritePokemon];
+    
+        if (id !== undefined && updatedFavorites.includes(id)) {
+          // Remove from favorites
+          updatedFavorites = updatedFavorites.filter((favId) => favId !== id);
+        } else {
+          // Add to favorites
+          updatedFavorites.push(id);
+        }
+    
+        // Save updated favorites in LocalStorage
+        await AsyncStorage.setItem('favoritePokemon', JSON.stringify(updatedFavorites));
+        
+        // Update state
+        setFavoritePokemon(updatedFavorites);
+      } catch (error) {
+        console.error("Error updating favorites:", error);
+      }
+    }; 
         
 
   return (
     <ScreenWrapper>
       <HeaderBack title="Pokemon Details" back={true} color={color || '#ffffff'} normal={false} />
-      <View style={[styles.container, { backgroundColor: color || '#ffffff' }]}>
+      <View style={[styles.container, { backgroundColor: color || '#ffffff', position:'relative' }]}>
         {/* 
         <Text style={styles.text}>Pokemon ID: {id}</Text>
         <Text style={styles.text}>Pokemon Name: {name}</Text> */}
+        <TouchableOpacity style={{position:'absolute', top:-50, right:0, zIndex:999, width:40, height:40}} onPress={()=>favHandler(id)}> 
+            {
+                id !== undefined && favoritePokemon.includes(id) ? 
+                <AppIcons.HeartColor width={30}  
+                    fill="red" // Change color if favorited
+                    style={{marginTop:-24}}
+                />  
+                :
+                <AppIcons.Heart width={30} 
+                 // fill="white"
+                 fill="white"
+                 
+                /> 
+            } 
+        </TouchableOpacity>
+
         <View style={{height:'25%', backgroundColor:'transparent', justifyContent:'center'}}>
             <View style={styles.innerUpperContainer}>
                 <View style={styles.innerUpperContainerImage}> 
@@ -352,75 +408,75 @@ const DetailsScreen: React.FC<DetailsScreenProps> = ({ route }) => {
             {
                 activeSection == 'evolution' &&(
                     <View 
-  style={{
-    width: '100%', 
-    height: '92%', 
-    backgroundColor: theme.colors.background, 
-    borderTopEndRadius: 22, 
-    borderTopStartRadius: 22, 
-    padding: 18, 
-    paddingTop: 0, 
-    paddingBottom: 0
-  }}
-> 
-  <ScrollView showsVerticalScrollIndicator={false}>
-    <View style={{ marginVertical: 28 }}>
-      <Text 
-        style={{
-          fontSize: theme.fonts.b2,
-          fontWeight: theme.fontWeights.exExtraBold,
-          color: color
-        }}
-      >
-        Evolution Chart
-      </Text>
+                        style={{
+                            width: '100%', 
+                            height: '92%', 
+                            backgroundColor: theme.colors.background, 
+                            borderTopEndRadius: 22, 
+                            borderTopStartRadius: 22, 
+                            padding: 18, 
+                            paddingTop: 0, 
+                            paddingBottom: 0
+                        }}
+                    > 
+                        <ScrollView showsVerticalScrollIndicator={false}>
+                            <View style={{ marginVertical: 28 }}>
+                            <Text 
+                                style={{
+                                fontSize: theme.fonts.b2,
+                                fontWeight: theme.fontWeights.exExtraBold,
+                                color: color
+                                }}
+                            >
+                                Evolution Chart
+                            </Text>
 
-      {evolutionChain.length > 0 ? (
-        evolutionChain.map((item: any, index: number) => {
-          const nextEvolution = evolutionChain[index + 1];
-          return (
-            <View key={index} style={styles.evolutionChartContainer}>
-              {/* Current Evolution Stage */}
-              <View style={[styles.evolutionChartContaineritem, { width: '40%' }]}>
-                <Image source={{ uri: item.image }} style={{ width: 90, height: 100 }} />
-                <Text style={[styles.evolutionCharttext, { color: theme.isDark ? '#fff' : '#000' }]}>
-                  {item.name}
-                </Text>
-              </View>
+                            {evolutionChain.length > 0 ? (
+                                evolutionChain.map((item: any, index: number) => {
+                                const nextEvolution = evolutionChain[index + 1];
+                                return (
+                                    <View key={index} style={styles.evolutionChartContainer}>
+                                    {/* Current Evolution Stage */}
+                                    <View style={[styles.evolutionChartContaineritem, { width: '40%' }]}>
+                                        <Image source={{ uri: item.image }} style={{ width: 90, height: 100 }} />
+                                        <Text style={[styles.evolutionCharttext, { color: theme.isDark ? '#fff' : '#000' }]}>
+                                        {item.name}
+                                        </Text>
+                                    </View>
 
-              {/* Evolution Arrow (If next stage exists) */}
-              {nextEvolution && (
-                <View style={[styles.evolutionChartContaineritem, { width: '20%' }]}>
-                  {theme.isDark ? (
-                    <AppIcons.LevelUpWhite width={'40%'} height={50} fill="white" />
-                  ) : (
-                    <AppIcons.LevelUp width={'50%'} height={50} fill="white" />
-                  )}
-                </View>
-              )}
+                                    {/* Evolution Arrow (If next stage exists) */}
+                                    {nextEvolution && (
+                                        <View style={[styles.evolutionChartContaineritem, { width: '20%' }]}>
+                                        {theme.isDark ? (
+                                            <AppIcons.LevelUpWhite width={'40%'} height={50} fill="white" />
+                                        ) : (
+                                            <AppIcons.LevelUp width={'50%'} height={50} fill="white" />
+                                        )}
+                                        </View>
+                                    )}
 
-              {/* Next Evolution Stage */}
-              {nextEvolution && (
-                <View style={[styles.evolutionChartContaineritem, { width: '40%' }]}>
-                  <Image source={{ uri: nextEvolution.image }} style={{ width: 90, height: 100 }} />
-                  <Text style={[styles.evolutionCharttext, { color: theme.isDark ? '#fff' : '#000' }]}>
-                    {nextEvolution.name}
-                  </Text>
-                </View>
-              )}
-            </View>
-          );
-        })
-      ) : (
-        <Text style={{ color: theme.isDark ? '#fff' : '#000', textAlign: 'center', marginTop: 20 }}>
-          No Evolution Data Available
-        </Text>
-      )}
-    </View>
-  </ScrollView>
-</View>
+                                    {/* Next Evolution Stage */}
+                                    {nextEvolution && (
+                                        <View style={[styles.evolutionChartContaineritem, { width: '40%' }]}>
+                                        <Image source={{ uri: nextEvolution.image }} style={{ width: 90, height: 100 }} />
+                                        <Text style={[styles.evolutionCharttext, { color: theme.isDark ? '#fff' : '#000' }]}>
+                                            {nextEvolution.name}
+                                        </Text>
+                                        </View>
+                                    )}
+                                    </View>
+                                );
+                                })
+                            ) : (
+                                <Text style={{ color: theme.isDark ? '#fff' : '#000', textAlign: 'center', marginTop: 20 }}>
+                                No Evolution Data Available
+                                </Text>
+                            )}
+                            </View>
+                        </ScrollView>
+                    </View>
                 )
-            } 
+            }
 
         </View>
         

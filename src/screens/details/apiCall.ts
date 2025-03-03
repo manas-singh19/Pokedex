@@ -50,6 +50,7 @@ const getPokemonData = (pokemonId: number | undefined) => {
         }
       } catch (error) {
         console.error("Error fetching Pokémon details:", error);
+        
       } finally {
         setIsLoading(false);
       }
