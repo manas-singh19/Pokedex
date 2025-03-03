@@ -10,7 +10,7 @@ npx react-native run-ios >** for ios
 `` ./gradlew assembleRelease ``
 `` ./gradlew installRelease ``
 `` ./gradlew bundleRelease ``
-
+sss
 # Getting Started
 
 ``` Node Version: 18.19.0 ``` 
