@@ -10,7 +10,11 @@ npx react-native run-ios >** for ios
 `` ./gradlew assembleRelease ``
 `` ./gradlew installRelease ``
 `` ./gradlew bundleRelease ``
-sss
+
+<img src="https://raw.githubusercontent.com/manas-singh19/Pokedex/refs/heads/main/apk/Cover.png" width="200"/>
+
+<img src="https://github.com/manas-singh19/Pokedex/blob/main/apk/Project%20Screens.png?raw=true" width="200"/>
+
 # Getting Started
 
 ``` Node Version: 18.19.0 ``` 

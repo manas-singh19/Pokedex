@@ -26,7 +26,7 @@ export function MainStack() {
         initialRouteName="HomeScreen"
         screenOptions={{
           headerShown: false,
-         contentStyle: { backgroundColor: theme.theme.colors.background}, // Set screen background color 
+          contentStyle: { backgroundColor: theme.theme.colors.background}, // Set screen background color 
         }}
       >
 
@@ -35,17 +35,17 @@ export function MainStack() {
           component={HomeScreen}
           options={{ 
             statusBarStyle: theme.theme.isDark? "light":"dark", // "light" or "dark"  
-            statusBarBackgroundColor: '#000', // Set status bar color
+            statusBarBackgroundColor: theme.theme.isDark? "#000":"#fff", // Set status bar color
           }}
         /> 
 
         <Stack.Screen
           name="DetailsScreen"
           component={(props: any) => <DetailsScreen {...props} />}
-          options={{ 
-            statusBarStyle: theme.theme.isDark? "light":"dark", // "light" or "dark"  
-            statusBarBackgroundColor: '#000', // Set status bar color
-          }}
+          // options={{ 
+          //   statusBarStyle: theme.theme.isDark? "light":"dark", // "light" or "dark"  
+          //   // statusBarBackgroundColor: theme.theme.isDark? "#000":"#fff", // Set status bar color
+          // }}
         /> 
 
         <Stack.Screen
@@ -53,7 +53,7 @@ export function MainStack() {
           component={FavoriteScreen}
           options={{ 
             statusBarStyle: theme.theme.isDark? "light":"dark", // "light" or "dark"  
-            statusBarBackgroundColor: '#000', // Set status bar color
+            statusBarBackgroundColor: theme.theme.isDark? "#000":"#fff", // Set status bar color
           }}
         />
   

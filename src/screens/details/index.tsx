@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View, Image, TouchableOpacity,ScrollView } from 'react-native';
+import { StyleSheet, Text, View, Image, TouchableOpacity,ScrollView, StatusBar } from 'react-native';
 import React, { useEffect, useState, useCallback } from 'react';
 import ScreenWrapper from '../../components/screenWrapper';
 import HeaderBack from '../../components/headers/headerBack';
@@ -130,6 +130,9 @@ const DetailsScreen: React.FC<DetailsScreenProps> = ({ route }) => {
   return (
     <ScreenWrapper>
       <HeaderBack title="Pokemon Details" back={true} color={color || '#ffffff'} normal={false} />
+        
+      <StatusBar backgroundColor={color} barStyle={theme.isDark ? "dark-content" : "light-content"}/>
+
       <View style={[styles.container, { backgroundColor: color || '#ffffff', position:'relative' }]}>
         {/* 
         <Text style={styles.text}>Pokemon ID: {id}</Text>
@@ -157,8 +160,8 @@ const DetailsScreen: React.FC<DetailsScreenProps> = ({ route }) => {
                   )} */}
                    {pokemonDetails && pokemonDetails.sprites.other['official-artwork'].front_default && (
                         <Image 
-                        source={{ uri: pokemonDetails.sprites.other['official-artwork'].front_default }} 
-                        style={styles.pokemonImage} 
+                            source={{ uri: pokemonDetails.sprites.other['official-artwork'].front_default }} 
+                            style={styles.pokemonImage} 
                         />
                     )}
                 </View>

@@ -1,7 +1,5 @@
 import { useEffect, useState } from "react";
 import ApiService from '../../ApiServices';
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import NetInfo from "@react-native-community/netinfo";
 
 interface PokemonDetail {
   id: number;
@@ -12,49 +10,33 @@ interface PokemonDetail {
   titleCode: string;
 }
 
-const CACHE_KEY = "pokemonList";
-
 const usePokemonData = () => {
   const [pokemonList, setPokemonList] = useState<PokemonDetail[]>([]);
   const [nextPagination, setNextPagination] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
-  const [isConnected, setIsConnected] = useState(true); // Track internet status
-
-  useEffect(() => {
-    // Subscribe to internet connection changes
-    const unsubscribe = NetInfo.addEventListener(state => {
-      setIsConnected(state.isConnected ?? false);
-    });
-
-    loadCachedData(); // Load data from cache initially
-
-    return () => unsubscribe(); // Cleanup
-  }, []);
-
-  // Load cached Pokémon data when offline
-  const loadCachedData = async () => {
-    try {
-      const cachedData = await AsyncStorage.getItem(CACHE_KEY);
-      if (cachedData) {
-        setPokemonList(JSON.parse(cachedData));
-      }
-    } catch (error) {
-      console.error("Error loading cached Pokémon data:", error);
-    }
-  };
 
   // Fetch Pokémon list
   const fetchPokemonList = async (url: string = "pokemon") => {
-    if (isLoading || !isConnected) return; // Prevent API calls if offline
+    if (isLoading) return; // Prevent multiple API calls
 
     setIsLoading(true);
     try {
       const response = await ApiService.GetWithoutHeader(url);
       if (response?.data?.results) {
+        // Extract only the query parameters from response.data.next
         const nextUrl = response.data.next;
-        let nextQuery = nextUrl ? nextUrl.split("?")[1] : null;
-        setNextPagination(nextQuery); 
+        let nextQuery = null;
 
+        if (nextUrl) {
+          const urlParts = nextUrl.split("?"); // Split at "?"
+          if (urlParts.length > 1) {
+            nextQuery = urlParts[1]; // Get the query part after "?"
+          }
+        }
+
+        setNextPagination(nextQuery); // Store only the query string
+
+        // Extract IDs from URLs
         interface PokemonResult {
           name: string;
           url: string;
@@ -102,10 +84,7 @@ const usePokemonData = () => {
           })
         );
 
-        // Update state and cache new data
-        const updatedList = [...pokemonList, ...details];
-        setPokemonList(updatedList);
-        await AsyncStorage.setItem(CACHE_KEY, JSON.stringify(updatedList)); // Cache data
+        setPokemonList((prevList) => [...prevList, ...details]); // Append new data
       }
     } catch (error) {
       console.error("Error fetching Pokémon:", error);
@@ -122,8 +101,7 @@ const usePokemonData = () => {
     pokemonList, 
     nextPagination, 
     fetchMorePokemon: () => nextPagination && fetchPokemonList(`pokemon?${nextPagination}`), 
-    isLoading, 
-    isConnected
+    isLoading 
   };
 };
 
